@@ -1,0 +1,28 @@
+{% load static %}
+{% include 'header.html' %}
+
+<link rel="stylesheet" href="{% static 'css/user_login.css' %}">
+
+        <div class="container-xxl py-5">
+            <div class="container clr   ">
+                <div class="log-container">
+                    <div class="form-wrapper">
+                        
+                        <h2>Login</h2>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {{ form.as_p }}  
+                            <button type="submit">Login</button>
+                        </form>
+                        <br>
+                        <div class="footer">
+                            <p><a href="/forgot_password">Forgot Password</a></p>
+                            <p>Don't hav an account ? <a href="/reg">Register here</a></p>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% include 'footer.html' %}

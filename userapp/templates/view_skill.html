@@ -1,0 +1,39 @@
+
+{% load static %}
+{% include 'header.html' %}
+ <link rel="stylesheet" href="{% static 'css/viewskill.css' %}">
+<body>
+
+<div class="view-container">
+    <h2>My Skills</h2>
+
+    {% if user_skills %}
+        {% for skill in user_skills %}
+            <div class="skill-card">
+                <h3>{{ skill.name }}</h3>
+                <p><strong>Category:</strong> {{ skill.category }}</p>
+                <p><strong>Subcategory:</strong> {{ skill.sub_category }}</p>
+
+                <!-- Display Video if Exists -->
+                {% if skill.skill_video %}
+                    <video controls width="100%" poster="{{ skill.cover_image.url }}">
+                        <source src="{{ skill.skill_video.url }}" type="video/mp4">
+                    </video>
+                {% else %}
+                    <p>No video available</p>
+                {% endif %}
+
+                <!-- Edit Button -->
+                 <div>
+                <a href="{% url 'edit_skill' skill.id %}"><button class="editbutton">Edit Skill</button>
+                <a href="/profile"><button class="editbutton">Back</button></a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No skills posted yet.</p>
+    {% endif %}
+
+</div>
+
+{% include 'footer.html' %}

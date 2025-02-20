@@ -1,0 +1,48 @@
+{% load static %}
+{% include 'header.html' %}
+
+
+    <link rel="stylesheet" href="{% static 'css/postskill.css' %}">
+
+<body>
+
+<div class="skillform-container">
+    <h2>Post a New Skill</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="skillform-group">
+            <label>Name of Skill:</label>
+            {{ form.skill_name }}
+        </div>
+
+        <div class="skillform-group">
+            <label>Category:</label>
+            {{ form.category }}
+        </div>
+
+        <div class="skillform-group">
+            <label>Sub Category:</label>
+            {{ form.sub_category }}
+        </div>
+
+        <div class="skillform-group">
+            <label>Upload Skill Video:</label>
+            {{ form.skill_video }}
+        </div>
+
+        <div class="skillform-group">
+            <label>Cover Image:</label>
+            {{ form.cover_image }}
+        </div>
+
+        <button type="submit" class="submit-btn">Post Skill</button>
+    </form>
+</div>
+
+</body>
+</html>
+
+
+
+{% include 'footer.html' %}

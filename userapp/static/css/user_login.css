@@ -1,0 +1,166 @@
+
+.log-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+    background-image: url("../img/img3b.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    backdrop-filter: blur(1px);
+    width: 100%;
+    margin-top: -50px;
+    margin-bottom: -100px;
+}
+
+.form-wrapper {
+    /* background-color: rgba(255, 255, 255, 0.95); Semi-transparent white background */
+    background-color: #fcfdfe;
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+   
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Space between elements */
+    width: 100%;
+    align-items: center;
+}
+
+label {
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: capitalize; /* Mixed case */
+    margin-bottom: 5px;
+    color: #34495e;
+    text-align: left;
+    width: 100%;
+}
+.scale-wrapper {
+    transform: scale(0.8); /* Scale down the entire layout */
+    transform-origin: center; /* Keep the scaling centered */
+}
+
+
+.input-container {
+    width: 100%;
+    position: relative;
+}
+
+input {
+    background-color: #ffffff;
+    border: 2px solid #7f8c8d;
+    border-radius: 5px;
+    width: 100%;
+    padding: 12px 10px;
+    font-size: 16px;
+    color: #2c3e50;
+    outline: none;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+input:focus {
+    border: 2px solid #fbe5ac;
+    background-color: #f0f8ff;
+    color: #2c3e50;
+}
+
+input::placeholder {
+    color: rgba(44, 62, 80, 0.6);
+}
+/* clr{
+    background-color:#3498db;
+} */
+
+button {
+    background-color: #fe5d37; /* Bright blue button color */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #fe5d37; /* Slightly darker blue on hover */
+    transform: scale(1.05); /* Slight scaling effect */
+}
+
+button:active {
+    transform: scale(1); /* Reset scaling on click */
+}
+h2 {
+    background: linear-gradient(to right, #3498db, #8e44ad); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    font-size: 36px; 
+    font-weight: 700; 
+    margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    button {
+        font-size: 16px;
+    }
+}
+.message {
+    margin: 10px 0;
+    font-size: 0.9rem;
+}
+
+.success {
+    color: #28a745; /* Green for success */
+}
+
+.error {
+    color: #dc3545; /* Red for error */
+}
+
+.footer {
+    margin-top: 20px;
+    font-size: 0.99rem;
+    color: #fe5d37;
+}
+
+.footer a {
+    color: #fe5d37 ;
+    
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+.message {
+    margin-bottom: 10px; /* Reduced spacing */
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.8rem; /* Smaller font for messages */
+}
+.success {
+    background-color: #28a745; /* Green background for success */
+    color: #fff;
+}
+
+.error {
+    background-color: #dc3545; /* Red background for error */
+    color:#fff;
+}

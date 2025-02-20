@@ -1,0 +1,102 @@
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'css/reg.css' %}">       
+               
+        <div class="container-xxl py-5">
+            <div class="container clr   ">
+                <div class="reg-container">
+                    <div class="form-wrapper"style="max-width: 500px; padding: 10px;">
+                    
+                    <form  action="" method="post" enctype="multipart/form-data">
+                        <h2>
+                            {{title}}
+                        </h2>
+                        {% csrf_token %}
+                    
+                        {% if form.first_name %}
+                            <label for="first_name">Name</label>
+                            {{ form.first_name }}
+                        {% endif %}
+                    
+                        {% if form.username %}
+                            <label for="username">Username</label>
+                            {{ form.username }}
+                        {% endif %}
+                    
+                        {% if form.email %}
+                            <label for="email">Email-id</label>
+                            {{ form.email }}
+                        {% endif %}
+                    
+                        {% if form.contact %}
+                            <label for="contact">Phone number</label>
+                            {{ form.contact }}
+                        {% endif %}
+                    
+                        {% if form.gender %}
+                            <label for="gender">Gender</label>
+                            <div class="gender-container">
+                                {{ form.gender }}
+                            </div>
+                        {% endif %}
+                    
+                        {% if form.bio %}
+                            <label for="bio">Bio</label>
+                            {{ form.bio }}
+                        {% endif %}
+                    
+                        {% if form.interests %}
+                            <label for="interests">Interests</label>
+                            {{ form.interests }}
+                        {% endif %}
+                    
+                        {% if form.skills %}
+                            <label for="skills">Skills</label>
+                            {{ form.skills }}
+                        {% endif %}
+                    
+                        <!-- Checkbox Fields with Flexbox -->
+                        {% if form.is_teacher %}
+                            <div class="checkbox-container">
+                                {{ form.is_teacher }}
+                                <label for="is_teacher">{{ form.is_teacher.label }}</label>
+                            </div>
+                        {% endif %}
+                    
+                        {% if form.is_listener %}
+                            <div class="checkbox-container">
+                                {{ form.is_listener }}
+                                <label for="is_listener">{{ form.is_listener.label }}</label>
+                            </div>
+                        {% endif %}
+                    
+                        {% if form.proof_document %}
+                            <label for="proof_document">Proof of Teaching</label>
+                            {{ form.proof_document }}
+                        {% endif %}
+                    
+                        {% if form.image %}
+                            <label for="image">Profile Picture</label>
+                            {{ form.image }}
+                        {% endif %}
+                        {% if form.password %}
+                            <label for="password">Password</label>
+                            {{ form.password }}
+                        {% endif %}
+                        {% if form.confirm_passowrd %}
+                            <label for="confirm_passowrd">Confirm Password</label>
+                            {{ form.confirm_passowrd }}
+                        {% endif %}
+                    
+                        <button type="submit">Submit</button>
+                    </form>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+{% include 'footer.html' %}

@@ -1,0 +1,216 @@
+/* Full-Page Chat Layout */
+.chat-container {
+    width: 100%;
+    max-width: 1450px;
+    height: 90vh;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    background: url("../img/e3.jpg") no-repeat center center/cover;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    margin-bottom: 0px;
+}
+
+/* Chat Header */
+.chat-header {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 15px 15px 0 0;
+    position: sticky;
+    top: 0;
+}
+
+.chat-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Chat Messages Section */
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Chat Bubble Styling */
+.message {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    position: relative;
+    cursor: pointer; /* Make the messages clickable */
+}
+
+/* Sent Message (Right Side) */
+.sent {
+    align-self: flex-end;
+    background: #ff7b54;
+    color: white;
+    padding: 10px;
+    border-radius: 20px;
+    max-width: 70%;
+    text-align: left;
+}
+
+/* Received Message (Left Side) */
+.received {
+    align-self: flex-start;
+    background: #e0e0e0;
+    color: black;
+    padding: 10px;
+    border-radius: 20px;
+    max-width: 70%;
+    text-align: left;
+}
+
+/* Message Time */
+.message-time {
+    font-size: 10px;
+    display: block;
+    text-align: right;
+    opacity: 0.7;
+    margin-top: 5px;
+
+}
+
+/* Chat Input */
+.chat-input {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #ccc;
+    position: relative;
+}
+
+/* Emoji Button */
+.emoji-container {
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+/* Input Field */
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background: #f5f5f5;
+    width: 80%;  /* Ensure input takes proper space */
+    min-width: 200px; /* Prevent it from shrinking */
+}
+
+/* Send Button */
+.send-btn {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* Emoji Picker Box */
+.emoji-picker {
+    position: absolute;
+    bottom: 50px;
+    left: 10px;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
+    display: none;
+    flex-wrap: wrap;
+    width: 220px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.emoji-picker.active {
+    display: flex;
+}
+
+/* Emoji List */
+.emoji-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* Emoji Clickable Style */
+.emoji-list span {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px;
+}
+
+.emoji-list span:hover {
+    background: #eee;
+    border-radius: 5px;
+}
+
+.input-area {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adds space between elements */
+    width: 100%;
+}
+
+.emoji-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.send-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+input#messageInput {
+    flex-grow: 1;
+    padding: 10px;
+    min-width: 250px; /* Adjust this as needed */
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+/* delete option */
+.delete-btn {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    display: none;  /* Hide by default */
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.message:hover .delete-btn {
+    display: inline; /* Show delete button on hover */
+}
+
+
+.message-container {
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+    background-color: #ff7f50;
+    border-radius: 10px;
+}
+

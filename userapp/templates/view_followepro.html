@@ -1,0 +1,117 @@
+{% load static %}
+{% include 'header.html' %}
+
+<link rel="stylesheet" href="{% static 'css/followeeprofile.css' %}">
+
+
+<div class="profile-container">
+    <img class="rounded-circle profile-img mb-3" src="{{ followee.image.url }}" alt="User Profile Picture">
+
+    <h2>@{{ followee.username }}</h2>
+    <p>{{ followee.bio }}</p>
+    <p>interests : {{ followee.interests }}</p>
+
+    <div class="stats">
+        <p><strong>{{ followers_count }}</strong><span id="followers-section">
+            Followers
+        </span>
+       
+        <p>
+            <strong>{{ following_count }}</strong>
+            <span id="following-section"> Following </span>
+        </p>
+    </div>
+    <div id="followers-container">
+        <h4>Followers</h4>
+        <ul>
+            {% for follower in followers_list %}
+
+           <li>  <img src="{{ follower.follower.image.url }}" alt="Profile Pic">
+            @{{ follower.follower.username }}</li>
+            {% empty %}
+                <li>No followers yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
+
+    <!-- Following List -->
+<div id="following-container">
+    <h4>Following</h4>
+    <ul>
+        {% for following in following_list %}
+            <li>
+                <img src="{{ following.followee.image.url }}" alt="Profile Pic">
+                @{{ following.followee.username }}
+            </li>
+        {% empty %}
+            <li>Not following anyone yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+    <!-- Message Button -->
+    <a href="{% url 'message_user' followee.id %}">
+        <button class="btn message-btn">Message</button>
+    </a>
+<!-- follow/unfollow -->
+    <form method="POST" action="{% url 'toggle_follow' followee.id %}">
+        {% csrf_token %}
+        {% if is_following %}
+            <button type="submit" class="btn unfollow-btn">Following</button>
+        {% else %}
+            <button type="submit" class="btn follow-btn">Follow</button>
+        {% endif %}
+    </form>
+
+
+    
+
+    {% if is_following %}
+    <h3>Posts</h3>
+    <div class="posts-container">
+        {% for post in followee.post_set.all %}  
+            <div class="post-card">
+                <p>{{ post.skill_name }}</p>
+                {% if skill.skill_video %}
+                    <video controls width="100%" poster="{{ skill.cover_image.url }}">
+                        <source src="{{ skill.skill_video.url }}" type="video/mp4">
+                    </video>
+                    <p><small>Posted on {{ post.created_at }}</small></p>
+                {% else %}
+                    <p>No video available</p>
+                {% endif %}
+               
+            </div>
+        {% empty %}
+            <p>No posts yet.</p>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Follow {{ followee.username }} to see their posts.</p>
+    {% endif %}
+</div>
+
+
+
+<!-- javascript for shwing followers  -->
+<script>
+    document.getElementById("followers-section").addEventListener("click", function() {
+        var followersContainer = document.getElementById("followers-container");
+        
+        // Toggle visibility
+        if (followersContainer.style.display === "none") {
+            followersContainer.style.display = "block";
+        } else {
+            followersContainer.style.display = "none";
+        }
+    });
+    document.getElementById("following-section").addEventListener("click", function() {
+        var followingContainer = document.getElementById("following-container");
+        followingContainer.style.display = (followingContainer.style.display === "none") ? "block" : "none";
+    });
+    </script>
+    
+
+{% include 'footer.html' %}

@@ -1,0 +1,39 @@
+.chat-list-container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-decoration: none;
+    color: black;
+}
+
+.chat-profile img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.chat-info {
+    flex: 1;
+}
+
+.chat-name {
+    font-weight: bold;
+}
+
+.chat-preview {
+    font-size: 14px;
+    color: gray;
+}
+
+.chat-time {
+    font-size: 12px;
+    color: lightgray;
+}

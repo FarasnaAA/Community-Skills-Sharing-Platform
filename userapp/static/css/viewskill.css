@@ -1,0 +1,87 @@
+/* General Page Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container */
+.view-container {
+    max-width: 700px;
+    margin: 50px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.container-xxl{
+    background-image:url("../img/e3.jpg")
+
+  }
+
+/* Header */
+h1 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+/* Skill List */
+.skill-list {
+    list-style: none;
+    padding: 0;
+}
+
+.skill-item {
+    background: #ffffff;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Skill Name */
+.skill-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Video Player */
+video {
+    width: 600%;
+    max-width: 250px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+/* Buttons */
+.editbutton {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color:#fe5d37;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.editbutton:hover {
+    background: #e04520;
+}
+
+/* No Skills Message */
+.no-skill {
+    font-size: 18px;
+    color: #888;
+    margin-top: 20px;
+}

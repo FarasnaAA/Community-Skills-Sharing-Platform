@@ -1,0 +1,211 @@
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+/* Profile Container */
+.profile-container {
+    background: #fff;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+    background-image:url("../img/e3.jpg");
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: bottom 0px; ;
+
+}
+
+/* Profile Picture */
+.profile-pic {
+    width: 120px;  /* Reduced from 120px */
+    height: 80px; /* Adjusted to maintain circular shape */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fe5d37; /* Added border thickness */
+}
+.profile-container img {
+    width: 250px;  /* Reduced from 120px */
+    height:250px;
+    
+    
+}
+
+/* Username */
+h2 {
+    margin-top: 10px;
+    color: #333;
+}
+
+/* Bio */
+p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Stats Section */
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+}
+
+.stats p {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Follow & Unfollow Button */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+/* Follow Button */
+.follow-btn {    background-color: #28a745;
+    color: white;
+}
+
+.follow-btn:hover {
+    background-color: #218838;
+}
+
+/* Unfollow Button */
+.unfollow-btn {
+    background-color:#fe5d37;
+    color: white;
+}
+
+.unfollow-btn:hover {
+    background-color: #fe5d37;
+}
+
+/* Message Button */
+.message-btn {
+    background-color:#fe5d37;
+    color: white;
+}
+
+.message-btn:hover {
+    background-color:#fe5d37;
+}
+
+
+/* follower section style */
+
+#followers-section {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+#followers-container {
+    display: none;
+    margin-top: 10px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color:transparent;
+    width: 300px;
+}
+#followers-section:hover {
+    text-decoration: none !important; /* Prevent underline on hover */
+}
+#followers-section a {
+    text-decoration: none !important;
+    color: inherit; /* Ensures it doesn’t change color */
+}
+
+#followers-container h4 {
+    text-align: center;
+    font-weight: bold;
+}
+
+#followers-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+#followers-container li {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#followers-container img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+#followers-container li:last-child {
+    border-bottom: none;
+}
+
+#followers-container li[text-align="center"] {
+    text-align: center;
+}
+
+/* Following section style */
+#following-section {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+#following-container {
+    display: none;
+    margin-top: 10px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color:transparent;
+    width: 300px;
+    position: absolute; /* Ensures it moves independently */
+    right: 20px;
+}
+
+#following-section:hover {
+    text-decoration: none !important;
+}
+
+#following-container h4 {
+    text-align: center;
+    font-weight: bold;
+}
+
+#following-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+#following-container li {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#following-container img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+#following-container li:last-child {
+    border-bottom: none;
+}
+
+

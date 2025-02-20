@@ -1,0 +1,136 @@
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'css/users.css' %}">
+<body>
+    <h2><center><u>Users List</u></center></h2>
+    <div class="table-container">
+        
+    <table>
+        <tr>
+            <th>Si.No</th>
+            <th>Username</th>
+            <th>E-mail</th>
+            <th>Phone No</th>
+            <th>Gender</th>
+            <th>Teacher</th>
+            <th>Listener</th>
+            <th>Proof_document</th>
+            <th>Actions</th>
+        </tr>
+        <tr>
+            {% for user in users %}
+            <td>
+                {{ forloop.counter }}
+            </td>
+            <td>
+                {{ user.username }}
+            </td>
+            <td>
+                {{ user.email }}
+            </td>
+            <td>
+                {{ user.contact }}
+            </td>
+            <td>{{ user.gender }}</td>
+            <!-- <td>{{ user.bio }}</td> -->
+            <!-- <td>{{ user.skills }}</td>
+            <td>{{ user.interests }}</td> -->
+            {% if user.is_teacher %}
+                <td>{{ user.is_teacher }}</td>
+            {% else %}
+                <td>- </td>
+            {% endif %}
+
+            {% if user.is_listener %}
+                <td>{{ user.is_listener }}</td>
+            {% else %}
+                <td>- </td>
+            {% endif %}
+
+            <td>
+                {% if user.proof_document %}
+                    {% if user.proof_document.url|slice:"-4:" == ".mp4" %}
+                        <!-- Video Popup Button -->
+                        <button onclick="openModal('{{ user.proof_document.url }}', 'video')" class="media-btn">
+                            🎥 Play Video
+                        </button>
+                    {% elif user.proof_document.url|slice:"-4:" == ".jpg" or user.proof_document.url|slice:"-4:" == ".png" or user.proof_document.url|slice:"-4:" == ".jpeg" %}
+                        <!-- Clickable Image -->
+                        <img src="{{ user.proof_document.url }}" alt="Proof Image" width="50" height="50" style="cursor:pointer;" onclick="openModal('{{ user.proof_document.url }}', 'image')">
+                    {% else %}
+                        {{ user.proof_document }}
+                    {% endif %}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            
+
+            {% if user.is_approved %}
+            <td>
+                <button type="submit" ><a href="{% url 'delete_user' user.id %}">Delete</a></button>
+             </td>
+            
+            {% else %}
+            <td>
+                <button type="submit" ><a href="{% url 'approve_teachers' user.id %}">Approve</a></button><br>
+                <button type="submit" ><a href="{% url 'reject_teachers' user.id %}">Reject</a></button>
+
+            </td>
+            <!-- <td>
+                <button type="submit" ><a href="{% url 'reject_teachers' user.id %}">Reject</a></button>
+            </td> -->
+            {% endif %}
+            
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    
+
+<!-- Popup Modal (Hidden by Default) -->
+<div id="mediaModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <!-- Video Element -->
+        <video id="modalVideo" width="400" height="400" controls style="display:none;">
+            <source id="modalVideoSource" src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <!-- Image Element -->
+        <img id="modalImage" src="" alt="Proof Image" width="400" height="400" style="display:none;">
+    </div>
+</div>
+
+
+<!-- JavaScript for Popup -->
+<script>
+    function openModal(mediaUrl, type) {
+        var modal = document.getElementById("mediaModal");
+        var video = document.getElementById("modalVideo");
+        var image = document.getElementById("modalImage");
+        var videoSource = document.getElementById("modalVideoSource");
+    
+        if (type === "video") {
+            videoSource.src = mediaUrl;
+            video.style.display = "block";
+            image.style.display = "none";
+            video.load(); // Reload video source
+        } else if (type === "image") {
+            image.src = mediaUrl;
+            image.style.display = "block";
+            video.style.display = "none";
+        }
+    
+        modal.style.display = "flex";
+    }
+    
+    function closeModal() {
+        var modal = document.getElementById("mediaModal");
+        var video = document.getElementById("modalVideo");
+    
+        video.pause(); // Stop the video when modal is closed
+        modal.style.display = "none";
+    }
+    </script>
+{% include 'footer.html' %}

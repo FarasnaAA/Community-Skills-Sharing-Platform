@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+.admin-container {
+    margin: 50px auto;
+    width: 80%;
+    padding: 20px;
+    background: white;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+.admin-header {
+    background: darkblue;
+    color: white;
+    padding: 10px;
+    font-size: 22px;
+}
+.admin-menu {
+    margin-top: 20px;
+}
+.admin-menu a {
+    text-decoration: none;
+    color: white;
+    background: darkblue;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 5px;
+}

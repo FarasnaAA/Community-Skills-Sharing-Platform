@@ -1,0 +1,135 @@
+
+
+.container-xxl{
+    background-image:url("../img/e3.jpg");;
+}
+h2 {
+    margin-bottom: 20px;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+.profile-card {
+    width: 250px;
+    padding: 15px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.profile-card:hover {
+    transform: scale(1.1); /* Zoom in effect */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    z-index: 10; /* Ensures the hovered profile is above others */
+}
+
+
+.profile-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid  #fe5d37;
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+    width: 15px; /* Adjust size of the dot */
+    height: 15px;
+    background-color: green; /* Green dot for active users */
+    border-radius: 50%;
+    border: 2px solid white; /* Adds a border for better visibility */
+}
+
+.profile-card h3 {
+    margin: 10px 0 5px;
+    font-size: 18px;
+}
+.profile-card p {
+    color: brown;
+    font-size: 14px;
+    margin: 5px 0;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.btn {
+    display: inline-block;
+    padding: 8px 15px;
+    margin: 5px;
+    font-size: 14px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+.follow-btn {
+    background-color: #4CAF50;
+}
+.follow-btn:hover {
+    background-color: #45a049;
+}
+.message-btn {
+    background-color: #fe5d37;
+}
+.message-btn:hover {
+    background-color: #fe5d37;
+}
+
+
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.search-container input {
+    width: 400px;
+    padding: 8px 12px;
+    border: 2px solid #fe5d37;
+    border-radius: 20px;
+    outline: none;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.search-container input:focus {
+    border-color: #d94a2f;
+    box-shadow: 0px 0px 8px rgba(254, 93, 55, 0.5);
+}
+
+.search-container button {
+    padding: 8px 50px;
+    margin-left: 8px;
+    border: none;
+    background-color: #fe5d37;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.search-container button:hover {
+    background-color: #d94a2f;
+}
+
+
+/* .unfollow-btn {
+    background-color: green;
+    color: white;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+} */

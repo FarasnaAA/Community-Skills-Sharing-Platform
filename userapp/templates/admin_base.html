@@ -1,0 +1,17 @@
+
+
+<link rel="stylesheet" href="{% static 'css/adminindex.css' %}">
+
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>Admin Panel</h1>
+    </div>
+    <div class="admin-menu">
+        <!-- <a href="{% url 'admin_dashboard' %}">Dashboard</a> -->
+        <a href="/view_profile">Users</a>
+        <a href="/user_logout">Logout</a>
+    </div>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</div>

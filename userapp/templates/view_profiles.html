@@ -1,0 +1,68 @@
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'css/profiles.css' %}">
+<link rel="stylesheet" href="{% static 'css/chatlist.css' %}">
+
+
+<!-- Message Icon Section -->
+<div class="message-icon-container">
+    <a href="{% url 'chat_list' %}" class="message-icon">
+        <i class="fas fa-comment-alt"></i>
+        {% if unread_count > 0 %}
+            <span class="notification-badge">{{ unread_count }}</span>
+        {% endif %}
+    </a>
+</div>
+
+<form method="GET" action="{% url 'view_profiles' %}" class="search-form">
+    <div class="search-container">
+    <input type="text" name="q" placeholder="" value="{{ request.GET.q }}" class="search-input">
+    <button type="submit" class="search-button">Search</button>
+    </div>
+    </form>
+
+<div class="container">
+    {% for user in users %}
+    <a href="{% url 'followeprofile_view' user.id %}" class="profile-card-link">
+        <div class="profile-card">
+            {% if user.image %}
+                <img class="rounded-circle profile-img mb-3" src="{{ user.image.url }}" alt="User Profile Picture">
+            {% else %}
+                <img class="rounded-circle profile-img mb-3" src="{% static 'img/u1.jpeg' %}" alt="User Profile Picture">
+            {% endif %}
+
+            <h3>@{{ user.username }}</h3>
+
+            {% if user.is_listener %}
+                <p> Listener</p>
+            {% endif %}
+
+            {% if user.is_teacher %}
+                <p>Teacher</p>
+            {% endif %}
+        </a>
+
+        {% if user.is_following %}
+            <p>Following</p>
+            <a href="{% url 'message_user' user.id %}"><button class="btn message-btn">Message</button></a>
+            <form method="post" action="{% url 'follow' user.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn unfollow-btn">Unfollow</button>
+            </form>
+        {% else %}
+            <form method="post" action="{% url 'follow' user.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn follow-btn">Follow</button>
+            </form>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No users found.</p>
+{% endfor %}
+
+</div>
+
+
+
+
+{% include 'footer.html' %}
