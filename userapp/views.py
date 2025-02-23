@@ -437,21 +437,26 @@ def chat_list(request):
     chat_users = []
     for chat in chats:
         last_message = Message.objects.filter(follower_id=chat['follower'], followee=user).order_by('-message_created_at').first()
+        unread_count = Message.objects.filter(follower_id=chat['follower'], followee=user, is_read=False).count()  # Count unread messages per user
+
         chat_users.append({
             'follower': last_message.follower,
             'last_message': last_message.message,
-            'time': last_message.message_created_at
+            'time': last_message.message_created_at,
+            'unread_count': unread_count
         })
+        unread_count_total = Message.objects.filter(followee=user, is_read=False).count()  # Total unread messages
+        
 
     return render(request, 'chat_list.html', {'chat_users': chat_users})
 
 
-def unread_messages_count(request):
-    if request.user.is_authenticated:
-        unread_count = Message.objects.filter(followee=request.user, is_read=False).count()
-    else:
-        unread_count = 0
-    return {'unread_count': unread_count}
+# def unread_messages_count(request):
+#     if request.user.is_authenticated:
+#         unread_count = Message.objects.filter(followee=request.user, is_read=False).count()
+#     else:
+#         unread_count = 0
+#     return {'unread_count': unread_count}
 
 
 

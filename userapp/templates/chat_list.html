@@ -15,6 +15,9 @@
                 <p class="chat-name">{{ chat.follower.username }}</p>
                 <p class="chat-preview">{{ chat.last_message }}</p>
                 <span class="chat-time">{{ chat.time|timesince }} ago</span>
+                {% if chat.unread_count > 0 %}
+                    <span class="chat-unread-count">{{ chat.unread_count }}</span>
+                {% endif %}
             </div>
         </a>
     {% empty %}

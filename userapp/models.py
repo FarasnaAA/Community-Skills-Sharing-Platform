@@ -35,6 +35,7 @@ class Message(models.Model):
     message_created_at = models.DateTimeField(auto_now_add =True)
     followee = models.ForeignKey(Register, on_delete=models.CASCADE,null=True,related_name="followee")
     response = models.CharField(max_length=100, null=True)
+    is_read = models.BooleanField(default=False)  # Add this field
 
 
 #skill table
