@@ -322,12 +322,16 @@ def followeprofile_view(request, id):
     # Check if the user is already following
     follow_relationship = Message.objects.filter(follower=follower, followee=followee, is_following=True).first()
     is_following = follow_relationship is not None
-    followers = []
+    followers_list = []
+    following_list = []
+    followee_skills = [] 
+    followee_posts = []
     if is_following:
        followers_list = Message.objects.filter(followee=followee, is_following=True).select_related('follower')
         # Following List (People whom the followee follows)
        following_list = Message.objects.filter(follower=followee, is_following=True).select_related('followee')
-       followee_posts = Message.objects.filter(followee=followee)
+       followee_skills = Skill.objects.filter(user=followee).order_by('skill_created_at')
+
 
 
 
@@ -349,7 +353,7 @@ def followeprofile_view(request, id):
         'following_count': Message.objects.filter(follower=followee, is_following=True).count(),
         'followers_list': followers_list,  # Pass followers list to template
         'following_list': following_list,  # Pass following list to template
-        'post' :  followee_posts,
+        'followee_skills' :  followee_skills,
     }
     return render(request, 'view_followepro.html', context)
 
@@ -422,9 +426,9 @@ def delete_message(request, message_id):
                 message.delete()
 
             # Redirect to the message page
-            return redirect('message_user', id=message.followee.id)
+            return JsonResponse({"success": True})
     
-    return redirect('message_user', id=request.user.id)  # If GET request, redirect ba
+    return JsonResponse({"success": False})  # If GET request, redirect ba
 
 
 
@@ -495,12 +499,6 @@ def post_skill(request):
     return render(request, 'post_skill.html', {'form': form})
 
 
-#skill list
-@login_required
-def skill_list(request):
-    skills = Skill.objects.all()  # Fetch all skills
-    return render(request, 'skill_page.html', {'skills': skills})
-
 
 
 #view skill for edit
@@ -524,3 +522,67 @@ def edit_skill(request, id):
         form = SkillForm(instance=skill)  # Pre-fill form with skill data
 
     return render(request, 'edit_skill.html', {'form': form})
+
+
+
+
+
+#category list:
+@login_required
+def category_list(request):
+    """Show all unique categories as cards."""
+    categories = Category.objects.all()
+    return render(request, 'category_list.html', {'categories': categories})
+
+@login_required
+def subcategory_list(request, category_id):
+    category = get_object_or_404(Category, id=category_id)  # Ensure category exists
+    subcategories = Subcategory.objects.filter(category=category)  # Use `.filter()` instead of `.get()`
+    
+    return render(request, 'subcategory_list.html', {
+        'category': category,
+        'subcategories': subcategories
+    })
+
+
+# Show skills under a subcategory
+@login_required
+def skill_list(request, subcategory_id):
+    sub_category = get_object_or_404(Subcategory, id=subcategory_id)
+
+    # Filter skills where sub_category matches the selected subcategory name
+    skill_videos = Skill.objects.filter(sub_category=sub_category.name)
+
+    return render(request, 'skill_list.html', {
+        'subcategory': sub_category,
+        'skill_videos': skill_videos
+    })
+#add category
+@login_required
+def add_category(request):
+    categories = Category.objects.all()
+
+    if request.method == "POST":
+        if 'category_submit' in request.POST:  # Add Category
+            category_name = request.POST.get('category_name')
+            if category_name:
+                Category.objects.create(name=category_name)
+                return redirect('add_category')
+
+        elif 'subcategory_submit' in request.POST:  # Add Subcategory
+            subcategory_name = request.POST.get('subcategory_name')
+            category_id = request.POST.get('category')
+
+            if subcategory_name and category_id:
+                category = Category.objects.get(id=category_id)
+                Subcategory.objects.create(name=subcategory_name, category=category)
+                return redirect('add_category')
+
+    return render(request, 'admin_category.html', {'categories': categories})
+
+
+@login_required
+def delete_category(request, category_id):
+    category = Category.objects.get(id=category_id)
+    category.delete()
+    return redirect('add_category')

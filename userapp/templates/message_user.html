@@ -15,10 +15,9 @@
             <div class="message {% if message.follower == request.user %}sent{% else %}received{% endif %}">
                 <p>{{ message.message }}</p>
                 <span class="message-time">{{ message.message_created_at|date:"M d, H:i" }}</span>
-                <form action="{% url 'delete_message' message.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="delete-btn">🗑️</button>
-                </form>
+                {% if message.follower == request.user %}
+                <button type="button" class="delete-btn" onclick="deleteMessage('{{ message.id }}')">🗑️</button>
+            {% endif %}
             </div>
         {% empty %}
             <p>No messages yet.</p>
@@ -148,6 +147,37 @@
     }
 
     setInterval(fetchMessages, 3000);  // Auto-refresh chat every 3 seconds
+
+
+    function deleteMessage(messageId) {
+        if (confirm("Are you sure you want to delete this message?")) {
+            console.log("Deleting message:", messageId);  // Debugging log
+
+            fetch(`/delete_message/${messageId}/`, {
+                method: "POST",  // Use POST, not DELETE
+                headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({})  // Empty body
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("Message deleted:", messageId);  // Debugging log
+                    document.querySelector(`div[data-message-id="${messageId}"]`).remove();
+                } else {
+                    alert("Failed to delete message");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    }
+    
+
+
+
+    
 </script>
 
 
@@ -211,28 +241,8 @@
 
 
 
-<script>
-    function deleteMessage(messageId) {
-        if (confirm("Are you sure you want to delete this message?")) {
-            fetch(`/delete_message/${messageId}/`, {
-                method: "DELETE",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.querySelector(`[data-message-id="${messageId}"]`).remove();
-                } else {
-                    alert("Failed to delete message");
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        }
-    }
-    </script>
+
+   
     
     
 {% include 'footer.html' %}

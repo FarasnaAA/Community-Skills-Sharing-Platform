@@ -57,3 +57,15 @@ class Skill(models.Model):
      cover_image = models.ImageField(upload_to='uploads/',null=True, blank=True)
 
 
+# Category Model (All Main Skills)
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+
+# SubCategory Model (Belongs to a Category)
+class Subcategory(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="subcategories")
+
+    def __str__(self):
+        return f"{self.name} ({self.category.name})"

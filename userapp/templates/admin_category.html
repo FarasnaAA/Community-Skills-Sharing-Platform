@@ -1,0 +1,71 @@
+{% load static %}
+{% include 'header.html' %}
+
+
+
+
+<link rel="stylesheet" href="{% static 'css/admincategory.css' %}">
+
+<h2>Manage Categories</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="category_name">Category Name:</label>
+    <input type="text" name="category_name" required>
+    <button type="submit" name="category_submit" class="btn btn-success">Add Category</button>
+</form>
+
+
+<!-- Add Subcategory Form -->
+<form method="POST">
+    {% csrf_token %}
+    <label for="subcategory_name">Subcategory Name:</label>
+    <input type="text" name="subcategory_name" required>
+
+    <label for="category">Category:</label>
+    <select name="category" required>
+        <option value="">Select Category</option>
+        {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" name="subcategory_submit" class="btn btn-info">Add Subcategory</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Category</th>
+            <th>Subcategories</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+       
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.id }}</td>
+            <td>{{ category.name }}</td>
+            <td>
+                <ul>
+                    {% for sub in category.subcategories.all %}
+                        <li>{{ sub.name }}</li>
+                    {% empty %}
+                        <li>No subcategories</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <a href="{% url 'delete_category' category.id %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+       
+        
+    </tbody>
+</table>
+
+
+
+{% include 'footer.html' %}

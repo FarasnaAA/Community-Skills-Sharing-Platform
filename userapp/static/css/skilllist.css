@@ -1,0 +1,98 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+.container-xxl{
+    background-image:url("../img/e3.jpg");
+}
+
+/* Header Styling */
+h1 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 20px 0;
+    color:  #ff6b6b;
+    text-decoration:underline;
+}
+
+/* Video Container */
+.video-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 500px;
+    margin-top: 20px;
+    margin-bottom:100px ;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+/* Video Card */
+.video-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    padding: 15px;
+    text-align: center;
+    width: 300px;
+}
+
+.video-card:hover {
+    transform: scale(1.03);
+}
+
+/* User Info Section */
+.user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #ff6b6b;
+    object-fit: cover;
+}
+
+.username {
+    font-weight: bold;
+    color: #ff6b6b;
+    text-decoration: none;
+}
+
+.username:hover {
+    text-decoration: underline;
+}
+
+/* Video Styling */
+video {
+    width: 100%;
+    border-radius: 8px;
+    border: 2px solid #fe5d37;
+}
+
+/* No Content Message */
+p {
+    font-size: 16px;
+    text-align: center;
+    color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .video-container {
+        grid-template-columns: 1fr;
+    }
+}

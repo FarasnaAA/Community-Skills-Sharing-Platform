@@ -1,0 +1,23 @@
+
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'css/subcategorylist.css' %}">
+
+
+<h1>{{ category.name }} - Subcategories</h1>
+<div class="card-container">
+    {% if subcategories %}
+        {% for subcategory in subcategories %}
+            <a href="{% url 'skill_list' subcategory.id %}" class="card-link">
+                <div class="card subcategory-{{ forloop.counter }}">
+                    <h3>{{ subcategory.name }}</h3>
+                </div>
+            </a>
+        {% endfor %}
+    {% else %}
+        <p>No subcategories available under this category.</p>
+    {% endif %}
+</div>
+{% include 'footer.html' %}
+
+

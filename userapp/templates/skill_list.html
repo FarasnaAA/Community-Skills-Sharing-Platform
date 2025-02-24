@@ -1,0 +1,32 @@
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'css/skilllist.css' %}">
+
+<h1>{{ subcategory.name }}</h1>
+
+<div class="video-container">
+    {% if skill_videos %}
+        {% for skill in skill_videos %}
+        <div class="video-card">
+            <div class="user-info">
+                <a href="{% url 'followeprofile_view' skill.user.id %}">
+                    <img src="{{ skill.user.image.url }}" alt="User Profile Picture" class="rounded-circle profile-img mb-3">
+                </a>
+                <a href="{% url 'followeprofile_view' skill.user.id %}" class="username">@{{ skill.user.username }}</a>
+            </div>
+                <p>{{ skill.skill_name }}</p>
+                {% if skill.skill_video %}
+                    <video controls width="100%" poster="{{ skill.cover_image.url }}">
+                        <source src="{{ skill.skill_video.url }}" type="video/mp4">
+                    </video>
+                    <p><small>Posted on {{ skill.skill_created_at|date:"M d, H:i" }}</small></p>
+                {% endif %}
+            </video>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No skill videos available under this subcategory.</p>
+    {% endif %}
+</div>
+
+{% include 'footer.html' %}

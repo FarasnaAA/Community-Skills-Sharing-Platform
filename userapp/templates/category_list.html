@@ -1,0 +1,17 @@
+
+
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'css/categorylist.css' %}">
+
+
+    <h1>Choose a Category</h1>
+    <div class="card-container">
+        {% for category in categories %}
+           <a href="{% url 'subcategory_list' category.id %}"><div class="card category-{{ forloop.counter }}">
+                <h3>{{ category.name }}</h3>
+            </div>
+        </a> 
+        {% endfor %}
+    </div>
+    {% include 'footer.html' %}

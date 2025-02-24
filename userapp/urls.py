@@ -28,10 +28,14 @@ urlpatterns =[
     path("delete_message/<int:message_id>/", views.delete_message, name="delete_message"), 
     path('chat_list/<int:user_id>/',views.chat_list,name="chat_list"),
     path('chat_list',views.chat_list,name="chat_list") ,
-    path('skill_list',views.skill_list,name="skill_list") ,
     path('post_skill',views.post_skill,name="post_skill") ,
     path('view_skill',views.view_skill,name="view_skill") ,
     # path('view_skill/<int:id>/',views.view_skill,name="view_skill") ,
     path('edit_skill/<int:id>/', views.edit_skill, name="edit_skill"), 
+    path('category_list',views.category_list,name="category_list") ,
+    path('subcategory_list/<int:category_id>/',views.subcategory_list,name="subcategory_list") ,
+    path('skill_list/<int:subcategory_id>/', views.skill_list, name='skill_list'),
+    path('delete_category/<int:category_id>/',views.delete_category,name="delete_category") ,
+    path('add_category',views.add_category,name="add_category") ,
 
 ]

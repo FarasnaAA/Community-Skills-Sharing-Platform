@@ -71,14 +71,14 @@
     {% if is_following %}
     <h3>Posts</h3>
     <div class="posts-container">
-        {% for post in followee.post_set.all %}  
+        {% for skill in followee_skills %}  
             <div class="post-card">
-                <p>{{ post.skill_name }}</p>
+                <p>{{ skill.skill_name }}</p>
                 {% if skill.skill_video %}
                     <video controls width="100%" poster="{{ skill.cover_image.url }}">
                         <source src="{{ skill.skill_video.url }}" type="video/mp4">
                     </video>
-                    <p><small>Posted on {{ post.created_at }}</small></p>
+                    <p><small>Posted on {{ skill.skill_created_at|date:"M d, H:i" }}</small></p>
                 {% else %}
                     <p>No video available</p>
                 {% endif %}
