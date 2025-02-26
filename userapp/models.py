@@ -52,6 +52,7 @@ class Skill(models.Model):
     ]
      category = models.CharField(max_length=100, choices=CATEGORY_CHOICES, null=True)
      sub_category = models.CharField(max_length=100, null=True)
+     additional_category = models.CharField(max_length=100, null=True)
      skill_created_at = models.DateTimeField(auto_now_add =True)
      skill_video = models.FileField(upload_to='skill_videos/', null=True, blank=True)
      cover_image = models.ImageField(upload_to='uploads/',null=True, blank=True)
@@ -62,6 +63,10 @@ class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
 
+    def __str__(self):
+        return self.name  # This ensures the category name is displayed
+
+
 # SubCategory Model (Belongs to a Category)
 class Subcategory(models.Model):
     name = models.CharField(max_length=100)
@@ -69,3 +74,11 @@ class Subcategory(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.category.name})"
+    
+
+class AdditionalCategory(models.Model):
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE, related_name="additional_categories")
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name

@@ -34,8 +34,9 @@ urlpatterns =[
     path('edit_skill/<int:id>/', views.edit_skill, name="edit_skill"), 
     path('category_list',views.category_list,name="category_list") ,
     path('subcategory_list/<int:category_id>/',views.subcategory_list,name="subcategory_list") ,
-    path('skill_list/<int:subcategory_id>/', views.skill_list, name='skill_list'),
+    path('additionalcategory_list/<int:subcategory_id>/',views.additionalcategory_list,name="additionalcategory_list") ,
+    path('skill_list/<int:additionalcategory_id>/', views.skill_list, name='skill_list'),
     path('delete_category/<int:category_id>/',views.delete_category,name="delete_category") ,
     path('add_category',views.add_category,name="add_category") ,
-
+   path('edit_all_categories', views.edit_all_categories, name='edit_all_categories'),
 ]

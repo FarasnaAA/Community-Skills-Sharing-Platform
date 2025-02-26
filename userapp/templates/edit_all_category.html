@@ -1,0 +1,27 @@
+{% load static %}
+{% include 'header.html' %}
+
+<h2>Edit All Categories</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <h3>Categories</h3>
+    {% for form in category_forms %}
+        {{ form.as_p }}
+    {% endfor %}
+
+    <h3>Subcategories</h3>
+    {% for form in subcategory_forms %}
+        {{ form.as_p }}
+    {% endfor %}
+
+    <h3>Additional Categories</h3>
+    {% for form in additional_category_forms %}
+        {{ form.as_p }}
+    {% endfor %}
+
+    <button type="submit" class="btn btn-success">Save Changes</button>
+</form>
+
+{% include 'footer.html' %}

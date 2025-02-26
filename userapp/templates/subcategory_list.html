@@ -8,7 +8,7 @@
 <div class="card-container">
     {% if subcategories %}
         {% for subcategory in subcategories %}
-            <a href="{% url 'skill_list' subcategory.id %}" class="card-link">
+            <a href="{% url 'additionalcategory_list' subcategory.id %}" class="card-link">
                 <div class="card subcategory-{{ forloop.counter }}">
                     <h3>{{ subcategory.name }}</h3>
                 </div>

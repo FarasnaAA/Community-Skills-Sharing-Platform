@@ -17,13 +17,18 @@
         </div>
 
         <div class="skillform-group">
-            <label>Category:</label>
+            <label for="{{ form.category.id_for_label }}">Category:</label>
             {{ form.category }}
         </div>
 
         <div class="skillform-group">
-            <label>Sub Category:</label>
+            <label for="{{ form.sub_category.id_for_label }}">Sub Category:</label>
             {{ form.sub_category }}
+        </div>
+
+        <div class="skillform-group">
+            <label for="{{ form.additional_category.id_for_label }}">Additional Category:</label>
+            {{ form.additional_category }}
         </div>
 
         <div class="skillform-group">

@@ -489,13 +489,28 @@ def post_skill(request):
             skill.user = user  
             skill.save()
             messages.success(request, "Skill posted successfully.")
-            return redirect('profile')  # Redirect to skills list page
+            return redirect('profile')  
         else:
             messages.error(request, "Failed to post skill. Please check the form.")
 
+        # Ensure subcategories and additional categories are repopulated after form submission
+        if 'category' in request.POST:
+            try:
+                category_id = int(request.POST.get('category'))
+                form.fields['sub_category'].queryset = Subcategory.objects.filter(category_id=category_id)
+            except (ValueError, TypeError):
+                form.fields['sub_category'].queryset = Subcategory.objects.none()
+
+        if 'sub_category' in request.POST:
+            try:
+                subcategory_id = int(request.POST.get('sub_category'))
+                form.fields['additional_category'].queryset = AdditionalCategory.objects.filter(subcategory_id=subcategory_id)
+            except (ValueError, TypeError):
+                form.fields['additional_category'].queryset = AdditionalCategory.objects.none()
+
     else:
         form = SkillForm()
-    
+
     return render(request, 'post_skill.html', {'form': form})
 
 
@@ -536,31 +551,55 @@ def category_list(request):
 
 @login_required
 def subcategory_list(request, category_id):
-    category = get_object_or_404(Category, id=category_id)  # Ensure category exists
-    subcategories = Subcategory.objects.filter(category=category)  # Use `.filter()` instead of `.get()`
-    
+    category = get_object_or_404(Category, id=category_id)
+    subcategories = Subcategory.objects.filter(category=category)
+
     return render(request, 'subcategory_list.html', {
         'category': category,
-        'subcategories': subcategories
+        'subcategories': subcategories  # Ensure this matches the template
     })
 
+
+@login_required
+def additionalcategory_list(request, subcategory_id):
+    sub_category = get_object_or_404(Subcategory, id=subcategory_id)
+    additional_categories = AdditionalCategory.objects.filter(subcategory=sub_category)
+
+    for additional in additional_categories:
+        print(f"Additional Category: {additional.name}, ID: {additional.id}")  # Debugging
+
+    return render(request, 'additionalcategory_list.html', {
+        'subcategory': sub_category,
+        'additional_categories': additional_categories
+    })
 
 # Show skills under a subcategory
 @login_required
-def skill_list(request, subcategory_id):
-    sub_category = get_object_or_404(Subcategory, id=subcategory_id)
+def skill_list(request, additionalcategory_id):
+    print(additionalcategory_id)
+    additional_category = get_object_or_404(AdditionalCategory, id=additionalcategory_id)
+    print(additional_category.id)
+
 
     # Filter skills where sub_category matches the selected subcategory name
-    skill_videos = Skill.objects.filter(sub_category=sub_category.name)
+    skill_videos = Skill.objects.filter(additional_category=additional_category).order_by('id')
+    print(skill_videos)
 
     return render(request, 'skill_list.html', {
-        'subcategory': sub_category,
+        'additionalcategory' : additional_category,
         'skill_videos': skill_videos
     })
+
+
+
 #add category
 @login_required
 def add_category(request):
     categories = Category.objects.all()
+    subcategories = Subcategory.objects.all()  # Get all subcategories for dropdown
+    additional_categories = AdditionalCategory.objects.all()  # Fetch all additional categories
+
+
 
     if request.method == "POST":
         if 'category_submit' in request.POST:  # Add Category
@@ -577,12 +616,53 @@ def add_category(request):
                 category = Category.objects.get(id=category_id)
                 Subcategory.objects.create(name=subcategory_name, category=category)
                 return redirect('add_category')
+            
+        elif 'additional_category_submit' in request.POST:  # Add Additional Category
+            additional_category_name = request.POST.get('additional_category_name')
+            subcategory_id = request.POST.get('subcategory')
 
-    return render(request, 'admin_category.html', {'categories': categories})
+            if additional_category_name and subcategory_id:
+                subcategory = Subcategory.objects.get(id=subcategory_id)
+                AdditionalCategory.objects.create(name=additional_category_name, subcategory=subcategory)
+                return redirect('add_category')
 
+    return render(request, 'admin_category.html', {
+        'categories': categories,
+        'subcategories': subcategories,
+        'additional_categories': additional_categories  # Pass additional categories to the template
+    })
 
 @login_required
 def delete_category(request, category_id):
     category = Category.objects.get(id=category_id)
     category.delete()
     return redirect('add_category')
+
+
+def edit_all_categories(request):
+    categories = Category.objects.all()
+    subcategories = Subcategory.objects.all()
+    additional_categories = AdditionalCategory.objects.all()
+
+    if request.method == "POST":
+        category_forms = [CategoryForm(request.POST, instance=category) for category in categories]
+        subcategory_forms = [SubCategoryForm(request.POST, instance=subcategory) for subcategory in subcategories]
+        additional_category_forms = [AdditionalCategoryForm(request.POST, instance=additional_category) for additional_category in additional_categories]
+
+        all_forms = category_forms + subcategory_forms + additional_category_forms
+
+        if all(form.is_valid() for form in all_forms):
+            for form in all_forms:
+                form.save()
+            return redirect('add_category')
+
+    else:
+        category_forms = [CategoryForm(instance=category) for category in categories]
+        subcategory_forms = [SubCategoryForm(instance=subcategory) for subcategory in subcategories]
+        additional_category_forms = [AdditionalCategoryForm(instance=additional_category) for additional_category in additional_categories]
+
+    return render(request, 'edit_all_category.html', {
+        'category_forms': category_forms,
+        'subcategory_forms': subcategory_forms,
+        'additional_category_forms': additional_category_forms
+    })

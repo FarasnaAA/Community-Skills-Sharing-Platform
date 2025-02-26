@@ -76,6 +76,11 @@ form button:hover {
 .table tbody tr:hover {
     background-color: #f1f1f1;
 }
+td {
+    border-bottom: 1px solid #ddd; /* Horizontal lines */
+}
+
+
 
 ul {
     padding-left: 0;

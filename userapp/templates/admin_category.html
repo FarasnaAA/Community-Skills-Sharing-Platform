@@ -32,12 +32,31 @@
     <button type="submit" name="subcategory_submit" class="btn btn-info">Add Subcategory</button>
 </form>
 
+
+<!-- Add Additional Category Form -->
+<form method="POST">
+    {% csrf_token %}
+    <label for="additional_category_name">Additional Category Name:</label>
+    <input type="text" name="additional_category_name" required>
+
+    <label for="subcategory">Subcategory:</label>
+    <select name="subcategory" required>
+        <option value="">Select Subcategory</option>
+        {% for subcategory in subcategories %}
+            <option value="{{ subcategory.id }}">{{ subcategory.name }}</option>
+        {% endfor %}
+    </select>
+    
+    <button type="submit" name="additional_category_submit" class="btn btn-warning">Add Additional Category</button>
+</form>
+<a href="{% url 'edit_all_categories' %}" class="btn btn-primary">Edit All Categories</a>
 <table class="table">
     <thead>
         <tr>
             <th>ID</th>
             <th>Category</th>
             <th>Subcategories</th>
+            <th>Additional Category</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -48,14 +67,28 @@
             <td>{{ category.id }}</td>
             <td>{{ category.name }}</td>
             <td>
-                <ul>
+                <ul style="list-style: none; padding: 0; margin: 0;">
                     {% for sub in category.subcategories.all %}
-                        <li>{{ sub.name }}</li>
+                    <li>{{ sub.name }}</li>
+                        
+                    
                     {% empty %}
                         <li>No subcategories</li>
                     {% endfor %}
                 </ul>
-            </td>
+                </td>
+                <td>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        {% for sub in category.subcategories.all %}
+                            {% for additional in sub.additional_categories.all %}
+                                <li>{{ additional.name }}</li>
+                            {% empty %}
+                                <li>No additional categories</li>
+                            {% endfor %}
+                        {% endfor %}
+                     
+                    </ul>
+                </td>
             <td>
                 <a href="{% url 'delete_category' category.id %}" class="btn btn-danger">Delete</a>
             </td>

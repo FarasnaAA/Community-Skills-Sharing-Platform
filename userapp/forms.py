@@ -270,25 +270,71 @@ class ProfileForm(forms.ModelForm):
 
 
 class SkillForm(forms.ModelForm):
-     class Meta:
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        empty_label="Select Category",
+        required=True
+    )
+
+    sub_category = forms.ModelChoiceField(
+        queryset=Subcategory.objects.none(),  
+        empty_label="Select a Subcategory",
+        required=True
+    )
+
+    additional_category = forms.ModelChoiceField(
+        queryset=AdditionalCategory.objects.none(),  
+        empty_label="Select an Additional Category",
+        required=True
+    )
+
+    class Meta:
         model = Skill
-        fields = ['skill_name', 'category', 'sub_category','skill_video', 'cover_image']
+        fields = ['skill_name', 'category', 'sub_category', 'additional_category', 'skill_video', 'cover_image']
         widgets = {
             'skill_name': forms.TextInput(attrs={'id': 'skill_name', 'name': 'skill_name', 'placeholder': 'SkillName'}),
-            'category': forms.TextInput(attrs={'id': 'category', 'name': 'category', 'placeholder': 'category'}),
-            'sub_category': forms.TextInput(attrs={'id': 'sub_category', 'name': 'sub_category', 'placeholder': 'sub category'}),
-            'cover_image' : forms.FileInput(attrs={'id':'image','name':'image'}),
+            'cover_image': forms.FileInput(attrs={'id': 'image', 'name': 'image'}),
         }
         labels = {
             'skill_name': 'Name',
             'category': 'Category',
             'sub_category': 'Sub Category',
-            'Skill_video': 'video of skill',
-            'cover_image':'Cover image for post',
+            'additional_category': 'Additional Category',
+            'skill_video': 'Video of Skill',
+            'cover_image': 'Cover image for post',
         }
-        help_texts={
-        
-        }
+
+    def __init__(self, *args, **kwargs):
+        super(SkillForm, self).__init__(*args, **kwargs)
+
+        # Populate category dropdown
+        self.fields['category'].queryset = Category.objects.all()
+
+        # Check if form is bound (submitted)
+        if 'category' in self.data:
+            try:
+                category_id = int(self.data.get('category'))
+                self.fields['sub_category'].queryset = Subcategory.objects.filter(category_id=category_id)
+            except (ValueError, TypeError):
+                self.fields['sub_category'].queryset = Subcategory.objects.none()
+        elif self.instance.pk:
+            self.fields['sub_category'].queryset = Subcategory.objects.filter(category=self.instance.category)
+
+        if 'sub_category' in self.data:
+            try:
+                subcategory_id = int(self.data.get('sub_category'))
+                self.fields['additional_category'].queryset = AdditionalCategory.objects.filter(subcategory_id=subcategory_id)
+            except (ValueError, TypeError):
+                self.fields['additional_category'].queryset = AdditionalCategory.objects.none()
+        elif self.instance.pk:
+            self.fields['additional_category'].queryset = AdditionalCategory.objects.filter(subcategory=self.instance.sub_category)
+
+    
+
+
+
+
+    
 
 
 
@@ -301,5 +347,10 @@ class SubCategoryForm(forms.ModelForm):
     class Meta:
         model = Subcategory
         fields = ['name', 'category']
+
+class AdditionalCategoryForm(forms.ModelForm):
+    class Meta:
+        model = AdditionalCategory
+        fields = ['name', 'subcategory']
 
 
