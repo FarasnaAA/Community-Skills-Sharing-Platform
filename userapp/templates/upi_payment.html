@@ -1,0 +1,22 @@
+{% load static %}
+{% include 'header.html' %}
+
+<h2>Pay with {{ upi_option }}</h2>
+
+{% if upi_option == "PhonePe" %}
+    <img src="{% static 'img/qrcode.jpeg' %}" alt="PhonePe QR Code">
+    <p><strong>UPI ID:</strong> phonepe@upi</p>
+{% elif upi_option == "Google Pay" %}
+    <img src="{% static 'img/qrcode.jpeg' %}" alt="Google Pay QR Code">
+    <p><strong>UPI ID:</strong> gpay@upi</p>
+{% elif upi_option == "Paytm" %}
+    <img src="{% static 'img/qrcode.jpeg' %}" alt="Paytm QR Code">
+    <p><strong>UPI ID:</strong> paytm@upi</p>
+{% endif %}
+
+<p>After payment, click the button below:</p>
+<a href="{% url 'confirm_upi_payment' skill.id %}" class="btn btn-success">I Have Paid</a>
+
+
+
+{% include 'footer.html' %}

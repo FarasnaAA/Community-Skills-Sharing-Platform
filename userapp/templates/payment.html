@@ -1,0 +1,29 @@
+{% load static %}
+{% include 'header.html' %}
+
+<link rel="stylesheet" href="{% static 'css/payment.css' %}">
+
+<div class="payment-container">
+    <h2>Complete Your Payment</h2>
+    <p><strong>Video:</strong> {{ skill.skill_name }}</p>
+    <p><strong>Instructor:</strong> @{{ skill.user.username }}</p>
+    <p><strong>Price:</strong> ${{ skill.price }}</p>
+
+    <form method="POST" action="{% url 'process_payment' skill.id %}">
+        {% csrf_token %}
+
+        <div class="payment-methods">
+            <h3>Select Payment Method:</h3>
+            <label><input type="radio" name="payment_method" value="Credit Card"> Credit Card</label>
+            <label><input type="radio" name="payment_method" value="UPI"> UPI</label>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn pay-btn">Proceed to Pay</button>
+            <a href="{% url 'payment_confirmation' skill.id %}" class="btn cancel-btn">Cancel</a>
+        </div>
+    </form>
+</div>
+
+
+{% include 'footer.html' %}

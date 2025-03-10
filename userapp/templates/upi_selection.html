@@ -1,0 +1,18 @@
+{% load static %}
+{% include 'header.html' %}
+
+
+<h2>Select UPI Payment Method</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="radio" name="upi_option" value="PhonePe" required> PhonePe <br>
+    <input type="radio" name="upi_option" value="Google Pay"> Google Pay <br>
+    <input type="radio" name="upi_option" value="Paytm"> Paytm <br>
+
+    <button type="submit">Proceed to Pay</button>
+</form>
+
+
+
+{% include 'footer.html' %}

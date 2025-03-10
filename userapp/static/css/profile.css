@@ -108,3 +108,35 @@
 
 }
 
+
+
+.dashboard {
+    width: 30%;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    margin-left: 850px;
+   margin-top: 0px;
+   margin-bottom: 0px;
+}
+
+.dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dashboard th, .dashboard td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.dashboard a {
+    text-decoration: none;
+    color: brown;
+    font-weight: bold;
+    display: block;
+    padding: 5px;
+}

@@ -1,0 +1,39 @@
+.confirmation-container {
+    text-align: left; 
+    color: black;
+    padding: 20px;
+}
+
+.button-group {
+    margin-top: 20px;
+}
+
+h2,h3{
+    color:brown;
+}
+
+
+
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+}
+
+.confirm-btn {
+    background-color: green;
+    color: white;
+}
+
+.cancel-btn {
+    background-color: red;
+    color: white;
+    margin-left: 10px;
+}
+
+
+/* .container-xxl{
+    background-image:url("../img/b2.jpg")
+
+  } */

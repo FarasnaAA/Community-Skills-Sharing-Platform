@@ -1,0 +1,19 @@
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'css/payment.css' %}">
+
+<div class="payment-success-container">
+    <h2>Payment Successful! 🎉</h2>
+    <p>Thank you for your payment. Your transaction was completed successfully.</p>
+    <p><strong>Transaction ID:</strong> {{ transaction_id }}</p>
+    <p><strong>Amount Paid:</strong> ${{ amount }}</p>
+
+    <div class="btn-container">
+        <a href="{% url 'home' %}" class="btn">Go to Home</a>
+        {% if transaction_id %}
+    <a href="{% url 'view_receipt' transaction_id %}" class="btn btn-receipt">View Receipt</a>
+{% endif %}
+    </div>
+</div>
+
+{% include 'footer.html' %}

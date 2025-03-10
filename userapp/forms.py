@@ -275,22 +275,36 @@ class SkillForm(forms.ModelForm):
         empty_label="Select Category",
         required=True
     )
-
     sub_category = forms.ModelChoiceField(
-        queryset=Subcategory.objects.none(),  
+        queryset=Subcategory.objects.none(),
         empty_label="Select a Subcategory",
         required=True
     )
-
     additional_category = forms.ModelChoiceField(
-        queryset=AdditionalCategory.objects.none(),  
+        queryset=AdditionalCategory.objects.none(),
         empty_label="Select an Additional Category",
         required=True
     )
 
+    # Add Payment Type field (Free or Paid)
+    payment_type = forms.ChoiceField(
+        choices=[('free', 'Free'), ('paid', 'Paid')],
+        widget=forms.Select(attrs={'id': 'payment_type'})
+    )
+
+    # Add Price field (Only required if 'Paid' is selected)
+    price = forms.DecimalField(
+        required=False,
+        max_digits=6,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={'id': 'price', 'placeholder': 'Enter price'}),
+        label="Price (for paid videos)"
+    )
+
+
     class Meta:
         model = Skill
-        fields = ['skill_name', 'category', 'sub_category', 'additional_category', 'skill_video', 'cover_image']
+        fields = ['skill_name', 'category', 'sub_category', 'additional_category', 'skill_video', 'cover_image','payment_type', 'price']
         widgets = {
             'skill_name': forms.TextInput(attrs={'id': 'skill_name', 'name': 'skill_name', 'placeholder': 'SkillName'}),
             'cover_image': forms.FileInput(attrs={'id': 'image', 'name': 'image'}),
@@ -307,10 +321,10 @@ class SkillForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SkillForm, self).__init__(*args, **kwargs)
 
-        # Populate category dropdown
+        # Populate the category dropdown
         self.fields['category'].queryset = Category.objects.all()
+        print(Category.objects.all()) 
 
-        # Check if form is bound (submitted)
         if 'category' in self.data:
             try:
                 category_id = int(self.data.get('category'))
@@ -328,6 +342,29 @@ class SkillForm(forms.ModelForm):
                 self.fields['additional_category'].queryset = AdditionalCategory.objects.none()
         elif self.instance.pk:
             self.fields['additional_category'].queryset = AdditionalCategory.objects.filter(subcategory=self.instance.sub_category)
+
+    def clean(self):
+        """ Ensure the selected subcategory and additional category belong to the chosen category """
+        cleaned_data = super().clean()
+        category = cleaned_data.get("category")
+        sub_category = cleaned_data.get("sub_category")
+        additional_category = cleaned_data.get("additional_category")
+        payment_type = cleaned_data.get("payment_type")  # Ensure it's retrieved safely
+        price = cleaned_data.get("price")
+
+        if sub_category and sub_category.category != category:
+            self.add_error("sub_category", "Selected subcategory does not belong to the chosen category.")
+
+        if additional_category and additional_category.subcategory != sub_category:
+            self.add_error("additional_category", "Selected additional category does not belong to the chosen subcategory.")
+
+
+        # Ensure price is entered if the skill is paid
+        if payment_type == "paid" and not price:
+            self.add_error("price", "Please enter a price for paid skills.")
+
+
+        return cleaned_data
 
     
 

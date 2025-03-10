@@ -5,7 +5,7 @@
 
     <div class="container-xxl py-5">
         <div class="container">
-            <div class="row justify-content-center">
+            
                 <div class="col-lg-6">
                     <div class="card text-center profile-card">
                         <div class="card-body">
@@ -20,17 +20,14 @@
                                     <span class="status-indicator"></span>
                                 {% endif %}
                             </div>
-                            <!-- <img class="rounded-circle profile-img mb-3" src="{% static 'img/u1.jpeg' %}" alt="User Profile Picture"> -->
-                            <!-- <h3 class="text-primary mb-2">Farsana</h3>
-                            <p class="text-muted mb-1">Community Member</p>
-                            <p class="mb-4">"Passionate about sharing knowledge and connecting with the community to grow together."</p>
-                            <p class="text-muted mb-4">
-                                <i class="fa-solid fa-envelope me-2"></i>farsana@example.com <br>
-                                <i class="fa-solid fa-phone me-2"></i>+91-9876543210
-                            </p> -->
+                            
                             <h3>{{ user.username }}</h3>
 
+
                             
+
+                    
+                           
                             <div class="profile-details">
                                 {% if user.first_name %}
                                     <div class="profile-row">
@@ -97,69 +94,54 @@
                                         <span class="profile-value">Listener</span>
                                     </div>
                                 {% endif %}
-
-                              
-                            </div>
+                       
 
                             
 
                             <!-- <a href="#" class="btn btn-primary btn-custom me-2">Message</a>
                             <a href="#" class="btn btn-outline-primary btn-custom">Follow</a> -->
                             
-                        </div>
+                        
                         <a href="/profile_page" class="edit-button"> Edit</a>
                         {% if user.is_teacher %}
                         <div>
+                            
+                            {% if user.is_approved %}
+                            {% if user.is_teacher %}
                         <a href="/post_skill" class="edit-button"> Post skill</a> <a href="{% url 'view_skill' %}" class="edit-button"> View Skill</a>
+                        {% endif %}
+                        {% endif %}
                     </div>
                     {% endif %}
                     </div>
-                   
-
                 </div>
             </div>
-
-            <!-- <div class="row justify-content-center mt-5">
-                <div class="col-lg-8">
-                    <div class="card-section">
-                        <h4 class="text-primary mb-4">More Information</h4>
-                        <h5 class="text-primary mb-2">About Me</h5>
-                        <p>I am a tech enthusiast with experience in programming, design, and culinary arts...</p>
-                        <h5 class="text-primary mt-4 mb-2">Skills</h5>
-                        <ul class="list-unstyled">
-                            <li><i class="fa-solid fa-check text-primary me-2"></i>Programming: Python, C, Java</li>
-                            <li><i class="fa-solid fa-check text-primary me-2"></i>Culinary Arts: Baking, Healthy Recipes</li>
-                            <li><i class="fa-solid fa-check text-primary me-2"></i>Languages: English, Malayalam</li>
-                        </ul>
-                        <h5 class="text-primary mt-4 mb-2">Recent Activity</h5>
-                        <ul class="list-unstyled">
-                            <li class="d-flex mb-3">
-                                <i class="fa-solid fa-trophy text-primary me-3"></i>
-                                <div>
-                                    <h6 class="mb-1">Completed Python Basics Workshop</h6>
-                                    <small class="text-muted">2 days ago</small>
-                                </div>
-                            </li>
-                            <li class="d-flex mb-3">
-                                <i class="fa-solid fa-utensils text-primary me-3"></i>
-                                <div>
-                                    <h6 class="mb-1">Shared a recipe: "Quick and Healthy Salads"</h6>
-                                    <small class="text-muted">5 days ago</small>
-                                </div>
-                            </li>
-                            <li class="d-flex">
-                                <i class="fa-solid fa-users text-primary me-3"></i>
-                                <div>
-                                    <h6 class="mb-1">Joined the "Digital Design Community"</h6>
-                                    <small class="text-muted">1 week ago</small>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div> -->
-                
-            <!-- </div> -->
         </div>
     </div>
+
+
+                    <!-- Right Side: Dashboard -->
+                    <div class="dashboard">
+                        <table>
+                            <tr>
+                                <th>Dashboard</th>
+                            </tr>
+                            <tr>
+                                <td><a href="/courses/">📖 Course Details</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/payments/">💳 Payment Details</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/reset-password/">🔑 Reset Password</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/settings/">⚙️ Settings</a></td>
+                            </tr>
+                        </table>
+                    </div>
+               
+
+
 
     {% include 'footer.html' %}

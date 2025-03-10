@@ -14,11 +14,32 @@
                 </a>
                 <a href="{% url 'followeprofile_view' skill.user.id %}" class="username">@{{ skill.user.username }}</a>
             </div>
+            <div class="video-wrapper" onclick="showPaymentButton('{{ skill.id }}', '{{ skill.payment_type }}')">
                 <p>{{ skill.skill_name }}</p>
                 {% if skill.skill_video %}
-                    <video controls width="100%" poster="{{ skill.cover_image.url }}">
+                <video id="video-{{ skill.id }}" class="skill-video" controls width="100%" poster="{{ skill.cover_image.url }}">
+                    {% if skill.payment_type == "free" %}
                         <source src="{{ skill.skill_video.url }}" type="video/mp4">
-                    </video>
+                    {% endif %}
+                </video>
+                     <!-- Payment Button (Initially Hidden) -->
+                     {% if skill.payment_type != "free" %}
+                    <a href="{% url 'payment_confirmation' skill.id %}">
+                    <button id="pay-button-{{ skill.id }}" class="pay-button"  data-skill-id="{{ skill.id }}" style="display: none;">Pay Now</button></a>
+                 {% endif %}
+
+            </div>
+
+
+
+                        <!-- Show whether the video is Free or Paid -->
+    <p class="video-status">
+        {% if skill.payment_type == "free" %}
+            <span style="color: green;">Free</span>
+        {% else %}
+            <span style="color: red;">Paid</span>
+        {% endif %}
+    </p>
                     <p><small>Posted on {{ skill.skill_created_at|date:"M d, H:i" }}</small></p>
                 {% endif %}
             </video>
@@ -28,5 +49,71 @@
         <p>No skill videos available under this subcategory.</p>
     {% endif %}
 </div>
+
+
+<!-- JavaScript to Block Paid Videos Until Payment -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".skill-video").forEach(video => {
+            const skillId = video.id.split("-")[1]; // Extract skill ID from video ID
+            const payButton = document.getElementById(`pay-button-${skillId}`);
+    
+            // Check payment status via API
+            fetch(`/check-payment-status/${skillId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.has_paid) {
+                        video.pause();
+                        video.innerHTML = "";  // Remove video source to prevent playing
+    
+                        if (payButton) {
+                            payButton.style.display = "block"; // Ensure button is visible
+                            payButton.addEventListener("click", function () {
+                                window.location.href = `/payment-page/?skill_id=${skillId}`; // Redirect to payment page
+                            });
+                        }
+                    } else {
+                        // If paid, add the video source dynamicallyx   
+                        const sourceTag = document.createElement("source");
+                        sourceTag.src = "{{ skill.skill_video.url }}";
+                        sourceTag.type = "video/mp4";
+                        video.appendChild(sourceTag);
+                    }
+                });
+    
+            // Prevent playing if not paid
+            video.addEventListener("play", function (event) {
+                fetch(`/check-payment-status/${skillId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.has_paid) {
+                            event.preventDefault();
+                            video.pause();
+                            alert("Please complete the payment to watch this video.");
+                        }
+                    });
+            });
+        });
+    });
+
+    function showPaymentButton(skillId, paymentType) {
+    const video = document.getElementById(`video-${skillId}`);
+    const payButton = document.getElementById(`pay-button-${skillId}`);
+
+    if (!video || !payButton) {
+        console.error("Video or pay button not found for skill ID:", skillId);
+        return; // Stop execution if elements are missing
+    }
+
+    if (paymentType !== "free") {
+        video.pause();
+        video.src = "";  // Remove source to prevent playback
+        payButton.style.display = "block";  // Show "Pay Now" button
+    }
+}
+
+    </script>
+    
+    
 
 {% include 'footer.html' %}

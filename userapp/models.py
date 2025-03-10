@@ -56,6 +56,15 @@ class Skill(models.Model):
      skill_created_at = models.DateTimeField(auto_now_add =True)
      skill_video = models.FileField(upload_to='skill_videos/', null=True, blank=True)
      cover_image = models.ImageField(upload_to='uploads/',null=True, blank=True)
+     payment_type = models.CharField(max_length=10,  default='free')
+     price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)  # Store price for paid videos
+     paid_users = models.ManyToManyField(Register,related_name="paid_skills", blank=True)  # Track users who paid
+
+
+     def has_paid(self, user):
+        return self.paid_users.filter(id=user.id).exists()
+
+
 
 
 # Category Model (All Main Skills)
@@ -82,3 +91,19 @@ class AdditionalCategory(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+
+
+
+class Payment(models.Model):
+    user = models.ForeignKey(Register, on_delete=models.CASCADE)  # The user making the payment
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)  # The skill being purchased
+    amount = models.DecimalField(max_digits=10, decimal_places=2)  # Payment amount
+    payment_method = models.CharField(max_length=50)  # Payment method
+    status = models.CharField(max_length=20, choices=[('Pending', 'Pending'), ('Success', 'Success'), ('Failed', 'Failed')], default='Pending')
+    transaction_id = models.CharField(max_length=100, unique=True, blank=True, null=True)  # Unique transaction ID
+    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp of the payment
+
+    def __str__(self):
+        return f"{self.user.username} - {self.skill.skill_name} - {self.status}"

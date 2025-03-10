@@ -1,0 +1,28 @@
+.btn-container {
+    margin-top: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    margin: 5px;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #218838;
+}
+
+.btn-receipt {
+    background-color: #007bff;
+}
+
+.btn-receipt:hover {
+    background-color: #0056b3;
+}

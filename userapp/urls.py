@@ -29,6 +29,8 @@ urlpatterns =[
     path('chat_list/<int:user_id>/',views.chat_list,name="chat_list"),
     path('chat_list',views.chat_list,name="chat_list") ,
     path('post_skill',views.post_skill,name="post_skill") ,
+    path('load_subcategories', views.load_subcategories, name='ajax_load_subcategories'),
+    path('load_additional_categories',views.load_additional_categories, name='ajax_load_additional_categories'),
     path('view_skill',views.view_skill,name="view_skill") ,
     # path('view_skill/<int:id>/',views.view_skill,name="view_skill") ,
     path('edit_skill/<int:id>/', views.edit_skill, name="edit_skill"), 
@@ -39,4 +41,15 @@ urlpatterns =[
     path('delete_category/<int:category_id>/',views.delete_category,name="delete_category") ,
     path('add_category',views.add_category,name="add_category") ,
    path('edit_all_categories', views.edit_all_categories, name='edit_all_categories'),
+   path('payment_confirmation/<int:skill_id>/', views.payment_confirmation, name='payment_confirmation'),
+   path('make_payment/<int:skill_id>/', views.make_payment, name='make_payment'),
+   path('process_payment/<int:skill_id>/', views.process_payment, name='process_payment'),
+   path('confirm_credit_card_payment/<int:skill_id>/', views.confirm_credit_card_payment, name='confirm_credit_card_payment'),
+   path('payment_success/<str:transaction_id>/<str:amount>/', views.payment_success, name='payment_success'),
+   path('view_receipt/<str:transaction_id>/', views.view_receipt, name='view_receipt'),
+   path("upi_selection/<int:skill_id>/", views.upi_selection, name="upi_selection"),
+   path("upi_payment/<int:skill_id>/<str:upi_option>/", views.upi_payment, name="upi_payment"),  # Allow upi_option
+   path("confirm_upi_payment/<int:skill_id>/", views.confirm_upi_payment, name="confirm_upi_payment"),
+
+   
 ]

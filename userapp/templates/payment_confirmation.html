@@ -1,0 +1,33 @@
+{% load static %}
+{% include 'header.html' %}
+
+
+
+<link rel="stylesheet" href="{% static 'css/paymentconfo.css' %}">
+
+<div class="confirmation-container">
+    <h2>Confirm Your Payment</h2>
+    <p><strong>Video:</strong> {{ skill.skill_name }}</p>
+    <p><strong>Instructor:</strong> @{{ skill.user.username }}</p>
+    <p><strong>Price:</strong> ${{ skill.price }}</p>
+
+    <h3>Instructions:</h3>
+    <ul>
+        <li>Complete the assigned task within the given time.</li>
+        <li>Once completed, you will receive an e-certificate.</li>
+        <li>Make sure to follow all guidelines before proceeding.</li>
+    </ul>
+
+    <div class="button-group">
+        <!-- Confirm Payment Button -->
+        <a href="{% url 'make_payment' skill.id %}">
+            <button class="btn confirm-btn">Confirm Payment</button>
+        </a>
+
+        <!-- Cancel Button -->
+        <a href="javascript:history.back()">
+            <button class="btn cancel-btn">Cancel</button>
+        </a>
+    </div>
+</div>
+{% include 'footer.html' %}

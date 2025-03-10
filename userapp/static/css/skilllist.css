@@ -90,6 +90,30 @@ p {
     color: #555;
 }
 
+.video-status {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.pay-button {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.video-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .video-container {

@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Message, Register 
 from django.http import JsonResponse
 from django.core.exceptions import MultipleObjectsReturned
+import uuid
+from urllib.parse import unquote
 
 
 
@@ -208,7 +210,16 @@ def delete_user(request,id):
 # edit profile details include bio
 
 def profile_page(request):
-    user = Register.objects.get(id=request.user.id) 
+    user = Register.objects.get(id=request.user.id)
+        # Fetch course history
+    attended_courses = Skill.objects.filter(user=user, status="Completed")
+    pending_courses = Skill.objects.filter(user=user, status="Pending") 
+
+
+        # Fetch payment details
+    payments = Payment.objects.filter(user=user)
+
+
     if request.method == 'POST':
         form = ProfileForm(request.POST,request.FILES, instance=user)
         if form.is_valid():
@@ -222,8 +233,15 @@ def profile_page(request):
             messages.error(request, "Profile update failed. Please check your form.", extra_tags="error")
     else:
         form = ProfileForm(instance=user)
+        
+    
 
-    return render(request, 'reg.html', {'form': form,'title':'Create  Profile','button':'Create'})
+    return render(request, 'reg.html', {'form': form,
+        'user': user,
+        'attended_courses': attended_courses,
+        'pending_courses': pending_courses,
+        'payments': payments,
+        'title': 'Profile Dashboard'})
 
 
 
@@ -467,12 +485,16 @@ def chat_list(request):
 #post skills:
 @login_required
 def post_skill(request):
-    user = Register.objects.get(id=request.user.id)  
+
+
+    user = Register.objects.get(id=request.user.id)
+
 
     # Restrict skill posting to only teachers
     if not user.is_teacher:
         messages.error(request, "Only teachers can post skills.")
-        return redirect('profile')  
+        return redirect('profile') 
+        
 
     if request.method == 'POST':
         form = SkillForm(request.POST, request.FILES)
@@ -486,33 +508,50 @@ def post_skill(request):
 
         if form.is_valid():
             skill = form.save(commit=False)
-            skill.user = user  
+            skill.user = user
+            # Check if it's paid but no price is set
+            if skill.payment_type == 'paid' and not skill.price:
+                messages.error(request, "Please set a price for the paid skill.")
+                return redirect('post_skill')
+  
             skill.save()
             messages.success(request, "Skill posted successfully.")
             return redirect('profile')  
         else:
             messages.error(request, "Failed to post skill. Please check the form.")
 
-        # Ensure subcategories and additional categories are repopulated after form submission
-        if 'category' in request.POST:
-            try:
-                category_id = int(request.POST.get('category'))
-                form.fields['sub_category'].queryset = Subcategory.objects.filter(category_id=category_id)
-            except (ValueError, TypeError):
-                form.fields['sub_category'].queryset = Subcategory.objects.none()
-
-        if 'sub_category' in request.POST:
-            try:
-                subcategory_id = int(request.POST.get('sub_category'))
-                form.fields['additional_category'].queryset = AdditionalCategory.objects.filter(subcategory_id=subcategory_id)
-            except (ValueError, TypeError):
-                form.fields['additional_category'].queryset = AdditionalCategory.objects.none()
-
+       
     else:
         form = SkillForm()
+    categories = Category.objects.all()
+    subcategories = Subcategory.objects.all()
+    additional_categories = AdditionalCategory.objects.all()
+    
+    return render(request, 'post_skill.html', {'form': form,
+    'categories': categories,
+    'subcategories': subcategories,
+    'additional_categories': additional_categories})
 
-    return render(request, 'post_skill.html', {'form': form})
 
+def load_subcategories(request):
+    category_id = request.GET.get('category_id')
+    if category_id:
+        subcategories = Subcategory.objects.filter(category_id=category_id).values('id', 'name')
+    else:
+        subcategories = Subcategory.objects.none()  # Return an empty queryset if no category is selected
+    return JsonResponse(list(subcategories), safe=False)
+
+def load_additional_categories(request):
+            subcategory_id = request.GET.get('subcategory_id')
+            additional_categories = AdditionalCategory.objects.filter(subcategory_id=subcategory_id).values('id', 'name')
+            return JsonResponse(list(additional_categories), safe=False)   
+
+#check payment status
+@login_required
+def check_payment_status(request, skill_id):
+    skill = get_object_or_404(Skill, id=skill_id)
+    has_paid = Payment.objects.filter(user=request.user, skill=skill, status="completed").exists()
+    return JsonResponse({"has_paid": has_paid})
 
 
 
@@ -666,3 +705,199 @@ def edit_all_categories(request):
         'subcategory_forms': subcategory_forms,
         'additional_category_forms': additional_category_forms
     })
+
+
+
+#payment section:
+def payment_confirmation(request, skill_id):
+    skill = get_object_or_404(Skill, id=skill_id)
+    return render(request, 'payment_confirmation.html', {'skill': skill})
+
+
+def make_payment(request, skill_id):
+    skill = get_object_or_404(Skill, id=skill_id)
+    return render(request, 'payment.html', {'skill': skill})
+
+
+def process_payment(request, skill_id):
+    skill = get_object_or_404(Skill, id=skill_id)
+
+    if request.method == "POST":
+        payment_method = request.POST.get("payment_method")
+
+        if not payment_method:
+            messages.error(request, "Please select a payment method.")
+            return redirect("make_payment", skill_id=skill.id)
+        
+        if payment_method == "Credit Card":
+            return redirect('confirm_credit_card_payment', skill_id=skill_id)
+        elif payment_method == "UPI":
+            return redirect('upi_selection', skill_id=skill_id)
+
+        # Simulating a payment success for now (Replace with real payment gateway logic)
+        transaction_id = str(uuid.uuid4())  # Generating a unique transaction ID
+        payment_status = "Success"  # Change this dynamically based on payment response
+
+        # Store payment details in the database
+        payment = Payment.objects.create(
+            user=request.user,
+            skill=skill,
+            amount=skill.price,
+            payment_method=payment_method,
+            status=payment_status,
+            transaction_id=transaction_id
+        )
+
+        if payment.status == "Success":
+            messages.success(request, "Payment successful! You can now access the course.")
+            return redirect("skill_list")  # Redirect to user's dashboard or content page
+        else:
+            messages.error(request, "Payment failed. Please try again.")
+            return redirect("make_payment", skill_id=skill.id)
+
+    return render(request, "payment.html", {"skill": skill})
+
+
+def confirm_credit_card_payment(request, skill_id):
+    skill = get_object_or_404(Skill, id=skill_id)
+    errors = {}  # Dictionary to store field-specific validation errors
+
+    if request.method == "POST":
+        card_number = request.POST.get("card_number", "").strip().replace(" ", "")
+        expiry_date = request.POST.get("expiry_date", "").strip()
+        cvv = request.POST.get("cvv", "").strip()
+        cardholder_name = request.POST.get("cardholder_name", "").strip()
+
+        # Validate Card Number (Must be exactly 16 digits)
+        if not card_number:
+            errors["card_number"] = "Card number is required."
+        elif not card_number.isdigit() or len(card_number) != 16:
+            errors["card_number"] = "Invalid card number! Must be exactly 16 digits."
+
+        # Validate Expiry Date (Must be in MM/YY format)
+        expiry_pattern = r"^(0[1-9]|1[0-2])\/(\d{2})$"
+        if not expiry_date:
+            errors["expiry_date"] = "Expiry date is required."
+        elif not re.match(expiry_pattern, expiry_date):
+            errors["expiry_date"] = "Invalid expiry date! Use MM/YY format."
+
+        # Validate CVV (Must be 3 or 4 digits)
+        if not cvv:
+            errors["cvv"] = "CVV is required."
+        elif not cvv.isdigit() or len(cvv) not in [3, 4]:
+            errors["cvv"] = "Invalid CVV! Must be 3 or 4 digits."
+
+        # Validate Cardholder Name (Only alphabets and spaces allowed)
+        if not cardholder_name:
+            errors["cardholder_name"] = "Cardholder name is required."
+        elif not re.match(r"^[A-Za-z\s]+$", cardholder_name):
+            errors["cardholder_name"] = "Invalid name! Only alphabets and spaces are allowed."
+
+        # If there are errors, re-render the form with error messages
+        if errors:
+            return render(request, "credit_card_payment.html", {"skill": skill, "errors": errors})
+
+        # Simulating a payment success (Integrate real payment gateway here)
+        transaction_id = str(uuid.uuid4())  
+        payment_status = "Success"
+
+        # Save Payment
+        Payment.objects.create(
+            user=request.user,
+            skill=skill,
+            amount=skill.price,
+            payment_method="Credit Card",
+            status=payment_status,
+            transaction_id=transaction_id
+        )
+
+        messages.success(request, "Payment successful! You can now access the course.")
+        return redirect("payment_success",transaction_id=transaction_id, amount=skill.price)  
+
+    return render(request, "credit_card_payment.html", {"skill": skill, "errors": {}})
+
+
+
+def payment_success(request, transaction_id, amount):
+    return render(request, 'payment_success.html', {
+        'transaction_id': transaction_id,
+        'amount': amount
+    })
+   
+
+
+def view_receipt(request, transaction_id):
+    payment = get_object_or_404(Payment, transaction_id=transaction_id)
+    
+    # Get the teacher's name (update based on your actual model structure)
+    teacher_name = payment.skill.user.first_name if payment.skill else "Unknown"
+
+    # Get the user who made the payment
+    from_user = payment.user.username  
+    course_name = payment.skill.skill_name  # The purchased course
+
+    # Determine the payment method (Assuming 'payment_method' is stored in the Payment model)
+    payment_method = payment.payment_method if hasattr(payment, "payment_method") else "Unknown"
+
+    context = {
+        "payment": payment,
+        "to_user": teacher_name,
+        "from_user": from_user,
+        "course_name": course_name,
+        "payment_method": payment_method,  # Include payment method in the receipt
+    }
+    
+    return render(request, "receipt.html", context)
+
+
+
+
+def upi_selection(request, skill_id):
+    skill = get_object_or_404(Skill, id=skill_id)
+
+    if request.method == "POST":
+        upi_option = request.POST.get("upi_option")
+
+        if not upi_option:
+            messages.error(request, "Please select a UPI option.")
+            return redirect("upi_selection", skill_id=skill.id)
+
+        # Redirect to UPI Payment Page with selected option
+        return redirect("upi_payment", skill_id=skill.id, upi_option=upi_option)
+
+    return render(request, "upi_selection.html", {"skill": skill})
+
+
+
+
+def upi_payment(request, skill_id, upi_option):
+    skill = get_object_or_404(Skill, id=skill_id)
+
+    # Decode the UPI option to handle URL encoding
+    upi_option = unquote(upi_option)
+
+    return render(request, "upi_payment.html", {"skill": skill, "upi_option": upi_option})
+
+
+
+
+
+
+def confirm_upi_payment(request, skill_id):
+    skill = get_object_or_404(Skill, id=skill_id)
+
+    transaction_id = str(uuid.uuid4())  # Generate a unique transaction ID
+    payment_status = "Success"  # ✅ Change status to "Success"
+
+    # Store payment details
+    payment = Payment.objects.create(
+        user=request.user,
+        skill=skill,
+        amount=skill.price,
+        payment_method="UPI",
+        status=payment_status,
+        transaction_id=transaction_id
+    )
+
+    messages.success(request, "UPI Payment recorded! Admin will verify soon.")
+    return redirect("view_receipt" , transaction_id=transaction_id)

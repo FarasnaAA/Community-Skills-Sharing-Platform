@@ -1,53 +1,127 @@
 {% load static %}
 {% include 'header.html' %}
-
-
-    <link rel="stylesheet" href="{% static 'css/postskill.css' %}">
+<link rel="stylesheet" href="{% static 'css/postskill.css' %}">
 
 <body>
+    <div class="skillform-container">
+        <h2>Post a New Skill</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="skillform-group">
+                <label>Name of Skill:</label>
+                {{ form.skill_name }}
+            </div>
 
-<div class="skillform-container">
-    <h2>Post a New Skill</h2>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <div class="skillform-group">
-            <label>Name of Skill:</label>
-            {{ form.skill_name }}
-        </div>
+            <div class="skillform-group">
+                <label for="{{ form.category.id_for_label }}">Category:</label>
+                <select id="category" name="category">
+                    <option value="">Select Category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <div class="skillform-group">
-            <label for="{{ form.category.id_for_label }}">Category:</label>
-            {{ form.category }}
-        </div>
+            <div class="skillform-group">
+                <label for="{{ form.sub_category.id_for_label }}">Sub Category:</label>
+                <select id="sub_category" name="sub_category">
+                    <option value="">Select a Subcategory</option>
+                    {% for subcategory in subcategories %}
+                        <option value="{{ subcategory.id }}" data-category="{{ subcategory.category.id }}">{{ subcategory.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <div class="skillform-group">
-            <label for="{{ form.sub_category.id_for_label }}">Sub Category:</label>
-            {{ form.sub_category }}
-        </div>
+            <div class="skillform-group">
+                <label for="{{ form.additional_category.id_for_label }}">Additional Category:</label>
+                <select id="additional_category" name="additional_category">
+                    <option value="">Select an Additional Category</option>
+                    {% for additional_category in additional_categories %}
+                        <option value="{{ additional_category.id }}" data-subcategory="{{ additional_category.subcategory.id }}">{{ additional_category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <div class="skillform-group">
-            <label for="{{ form.additional_category.id_for_label }}">Additional Category:</label>
-            {{ form.additional_category }}
-        </div>
+            <div class="skillform-group">
+                <label>Upload Skill Video:</label>
+                {{ form.skill_video }}
+            </div>
 
-        <div class="skillform-group">
-            <label>Upload Skill Video:</label>
-            {{ form.skill_video }}
-        </div>
+            <div class="skillform-group">
+                <label>Cover Image:</label>
+                {{ form.cover_image }}
+            </div>
 
-        <div class="skillform-group">
-            <label>Cover Image:</label>
-            {{ form.cover_image }}
-        </div>
 
-        <button type="submit" class="submit-btn">Post Skill</button>
-    </form>
-</div>
+            <div class="skillform-group">
+                <label for="{{ form.payment_type.id_for_label }}">Payment Type:</label>
+                {{ form.payment_type }}
+            </div>
+            
+            <div class="skillform-group" id="price-section" style="display: none;">
+                <label for="{{ form.price.id_for_label }}">Price:</label>
+                {{ form.price }}
+            </div>
 
-</body>
-</html>
+            <button type="submit" class="submit-btn">Post Skill</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#category").change(function() {
+            var categoryId = $(this).val();
+            if (categoryId) {
+                $.ajax({
+                    url: "{% url 'ajax_load_subcategories' %}",
+                    data: {'category_id': categoryId},
+                    dataType: 'json',
+                    success: function(data) {
+                        var subCategoryDropdown = $("#sub_category");
+                        subCategoryDropdown.html('<option value="">Select a Subcategory</option>');
+                        $.each(data, function(index, item) {
+                            subCategoryDropdown.append('<option value="' + item.id + '">' + item.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $("#sub_category").html('<option value="">Select a Subcategory</option>');
+            }
+        });
 
+    
+        $("#sub_category").change(function() {
+            var subcategoryId = $(this).val();
+            if (subcategoryId) {
+                $.ajax({
+                    url: "{% url 'ajax_load_additional_categories' %}",
+                    data: {'subcategory_id': subcategoryId},
+                    dataType: 'json',
+                    success: function(data) {
+                        var additionalCategorySelect = $("#additional_category");
+                        additionalCategorySelect.html('<option value="">Select an Additional Category</option>');
+                        $.each(data, function(index, item) {
+                            additionalCategorySelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $("#additional_category").html('<option value="">Select an Additional Category</option>');
+            }
+        });
+
+
+        $("#payment_type").change(function() {
+            if ($(this).val() === "paid") {
+                $("#price-section").show();
+            } else {
+                $("#price-section").hide();
+            }
+        });
+    });
+</script>
+    
 
 
 {% include 'footer.html' %}
