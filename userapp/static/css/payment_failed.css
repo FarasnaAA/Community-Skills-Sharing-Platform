@@ -1,0 +1,48 @@
+.failed-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+h2 {
+    color: #dc3545;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+p {
+    color: #555;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.retry-btn, .home-btn {
+    display: inline-block;
+    margin: 10px;
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.retry-btn {
+    background: #007bff;
+}
+
+.retry-btn:hover {
+    background: #0056b3;
+}
+
+.home-btn {
+    background: #28a745;
+}
+
+.home-btn:hover {
+    background: #218838;
+}

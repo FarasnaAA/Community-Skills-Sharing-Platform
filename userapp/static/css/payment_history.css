@@ -1,0 +1,72 @@
+/* General Page Styling */
+.ph-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+    color:#fe5d37 ;
+}
+
+/* Table Styling */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color:black
+}
+
+th {
+    background: green;
+    color: white;
+}
+
+/* Status Colors */
+.status {
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.status.paid {
+    background: #28a745;
+    color: white;
+}
+
+.status.pending {
+    background: #ffc107;
+    color: #333;
+}
+
+.status.failed {
+    background: #dc3545;
+    color: white;
+}
+
+/* Hover Effects */
+tr:hover {
+    background: rgba(0, 123, 255, 0.1);
+    transition: 0.3s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    th, td {
+        padding: 8px;
+    }
+}

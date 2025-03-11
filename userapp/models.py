@@ -97,11 +97,17 @@ class AdditionalCategory(models.Model):
 
 
 class Payment(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),  # Default status
+        ('Success', 'Success'),
+        ('Failed', 'Failed'),
+        ('Refund', 'Refund')  # New refund status
+    ]
     user = models.ForeignKey(Register, on_delete=models.CASCADE)  # The user making the payment
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)  # The skill being purchased
     amount = models.DecimalField(max_digits=10, decimal_places=2)  # Payment amount
     payment_method = models.CharField(max_length=50)  # Payment method
-    status = models.CharField(max_length=20, choices=[('Pending', 'Pending'), ('Success', 'Success'), ('Failed', 'Failed')], default='Pending')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')  # Updated default status
     transaction_id = models.CharField(max_length=100, unique=True, blank=True, null=True)  # Unique transaction ID
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp of the payment
 

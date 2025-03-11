@@ -118,8 +118,9 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: left;
     margin-left: 850px;
-   margin-top: 0px;
-   margin-bottom: 0px;
+    position: relative; /* Ensure it can be lifted */
+    transform: translateY(-10px); /* Moves the box up */
+    transition: all 0.3s ease-in-out;
 }
 
 .dashboard table {

@@ -1,0 +1,19 @@
+{% load static %}
+{% include 'header.html' %}
+
+<div class="video-container">
+    <h2>{{ payment.skill.skill_name }} - Course Video</h2>
+
+    {% if payment.skill.skill_video %}
+        <video controls>
+            <source src="{{ payment.skill.skill_video.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    {% else %}
+        <p>No video available for this course.</p>
+    {% endif %}
+
+    <a href="{% url 'profile_page' %}" class="back-btn">back to profile</a>
+</div>
+
+{% include 'footer.html' %}

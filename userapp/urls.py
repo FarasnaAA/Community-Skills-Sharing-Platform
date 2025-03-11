@@ -50,6 +50,8 @@ urlpatterns =[
    path("upi_selection/<int:skill_id>/", views.upi_selection, name="upi_selection"),
    path("upi_payment/<int:skill_id>/<str:upi_option>/", views.upi_payment, name="upi_payment"),  # Allow upi_option
    path("confirm_upi_payment/<int:skill_id>/", views.confirm_upi_payment, name="confirm_upi_payment"),
+   path('payment-history/', views.payment_history, name='payment_history'),
+   path('view_course_video/<str:transaction_id>/', views.view_course_video, name='view_course_video'),
 
    
 ]

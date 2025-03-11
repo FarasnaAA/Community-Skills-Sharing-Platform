@@ -82,7 +82,7 @@
                         {% endif %}
                     </video>
                     <!-- Payment Button (Initially Hidden) -->
-                    {% if skill.payment_type != "free" %}
+                    {% if skill.payment_type != "free"and skill.id not in paid_skills %}
                     <a href="{% url 'payment_confirmation' skill.id %}">
                     <button id="pay-button-{{ skill.id }}" class="pay-button"  data-skill-id="{{ skill.id }}" style="display: none;">Pay Now</button></a>
                      {% endif %}

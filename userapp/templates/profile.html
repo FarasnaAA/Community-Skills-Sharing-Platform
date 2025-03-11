@@ -115,13 +115,11 @@
                     {% endif %}
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-
+                </div>
+                
                     <!-- Right Side: Dashboard -->
-                    <div class="dashboard">
+                <div class="col-lg-30">
+                    <div class=" dashboard ">
                         <table>
                             <tr>
                                 <th>Dashboard</th>
@@ -130,7 +128,7 @@
                                 <td><a href="/courses/">📖 Course Details</a></td>
                             </tr>
                             <tr>
-                                <td><a href="/payments/">💳 Payment Details</a></td>
+                                <td><a href="{% url 'payment_history' %}">💳 Payment Details</a></td>
                             </tr>
                             <tr>
                                 <td><a href="/reset-password/">🔑 Reset Password</a></td>
@@ -139,7 +137,13 @@
                                 <td><a href="/settings/">⚙️ Settings</a></td>
                             </tr>
                         </table>
-                    </div>
+                </div>    
+            </div>
+    
+        </div>
+    </div>
+
+
                
 
 

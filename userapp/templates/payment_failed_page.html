@@ -1,0 +1,14 @@
+{% load static %}
+{% include 'header.html' %}
+
+<link rel="stylesheet" href="{% static 'css/payment_failed.css' %}">
+
+<div class="failed-container">
+    <h2>Payment Failed ❌</h2>
+    <p>Your payment was not successful. Please try again.</p>
+
+    <a href="{% url 'make_payment' skill_id=payment.skill.id %}" class="retry-btn">Retry Payment</a>
+    <a href="{% url 'dashboard' %}" class="home-btn">Back to Dashboard</a>
+</div>
+
+{% include 'footer.html' %}

@@ -748,12 +748,25 @@ def process_payment(request, skill_id):
             transaction_id=transaction_id
         )
 
-        if payment.status == "Success":
+       # Simulate real payment processing (Replace with actual payment gateway integration)
+        payment_gateway_response = "Success"  # Change this dynamically based on payment response
+
+        if payment_gateway_response == "Success":
+            payment.status = "Success"
             messages.success(request, "Payment successful! You can now access the course.")
-            return redirect("skill_list")  # Redirect to user's dashboard or content page
-        else:
+        elif payment_gateway_response == "Failed":
+            payment.status = "Failed"
             messages.error(request, "Payment failed. Please try again.")
-            return redirect("make_payment", skill_id=skill.id)
+        elif payment_gateway_response == "Refund":
+            payment.status = "Refund"
+            messages.info(request, "Your payment has been refunded.")
+        else:
+            payment.status = "Pending"  # Default case
+
+        payment.save()  # Save the updated status in the database
+
+        return redirect("skill_list" if payment.status == "Success" else "make_payment", skill_id=skill.id)
+
 
     return render(request, "payment.html", {"skill": skill})
 
@@ -901,3 +914,25 @@ def confirm_upi_payment(request, skill_id):
 
     messages.success(request, "UPI Payment recorded! Admin will verify soon.")
     return redirect("view_receipt" , transaction_id=transaction_id)
+
+
+
+
+
+#payment history
+@login_required
+def payment_history(request):
+    payments = Payment.objects.filter(user=request.user, status='Success')  # Fetch only successful payments
+    return render(request, 'payment_history.html', {'payments': payments})
+
+
+
+#view course video after payment
+def view_course_video(request, transaction_id):
+    payment = get_object_or_404(Payment, transaction_id=transaction_id, status="Success")
+     # Check if payment was successful
+    if payment.status != "Success":
+        return redirect('payment_failed_page')  # Redirect users who haven't paid
+
+
+    return render(request, 'course_video.html', {'payment': payment})

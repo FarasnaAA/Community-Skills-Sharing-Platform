@@ -1,0 +1,40 @@
+{% load static %}
+{% include 'header.html' %}
+
+<link rel="stylesheet" href="{% static 'css/payment_history.css' %}">
+
+<div class="ph-container">
+    <h2>Payment History</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Teacher</th>
+                    <th>Course Name</th>
+                    <th>Amount Paid</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.skill.user.first_name }}</td>
+                    <td>{{ payment.skill.skill_name }}</td>
+                    <td>₹{{ payment.amount }}</td>
+                    <td>{{ payment.payment_method }}</td>
+                    <td class="status {{ payment.status|lower }}">{{ payment.status|title }}</td>
+                    <td>{{ payment.created_at }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No payments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include 'footer.html' %}
