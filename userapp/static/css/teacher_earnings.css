@@ -1,0 +1,73 @@
+/* General Page Styling */
+
+/* Earnings Container */
+.earnings-container {
+    width: 80%;
+    max-width: 900px;
+    background: white;
+    margin: 40px auto;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Earnings Summary */
+.earnings-summary {
+    display: flex;
+    justify-content: space-between;
+    background: #ffe7db;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.earnings-summary p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Table Styling */
+.earnings-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.earnings-table th, .earnings-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.earnings-table th {
+    background: #ff6f00;
+    color: white;
+}
+
+/* Withdraw Button */
+.withdraw-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    background: #ff6f00;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s;
+}
+
+.withdraw-btn:hover {
+    background: #e65c00;
+}

@@ -76,13 +76,19 @@
                 <div class="video-wrapper" onclick="showPaymentButton('{{ skill.id }}', '{{ skill.payment_type }}')">
                 <p>{{ skill.skill_name }}</p>
                 {% if skill.skill_video %}
-                    <video id="video-{{ skill.id }}" class="skill-video" controls width="100%" poster="{{ skill.cover_image.url }}">
-                        {% if skill.payment_type == "free" %}
-                        <source src="{{ skill.skill_video.url }}" type="video/mp4">
-                        {% endif %}
-                    </video>
+                <video id="video-{{ skill.id }}" 
+                class="skill-video" 
+                controls 
+                width="100%" 
+                poster="{{ skill.cover_image.url }}"
+                data-payment-type="{{ skill.payment_type }}"
+                data-src="{% if skill.skill_video %}{{ skill.skill_video.url }}{% endif %}">
+             {% if skill.payment_type == "free" or skill.id in paid_skills %}
+                 <source src="{{ skill.skill_video.url }}" type="video/mp4">
+             {% endif %}
+         </video>
                     <!-- Payment Button (Initially Hidden) -->
-                    {% if skill.payment_type != "free"and skill.id not in paid_skills %}
+                    {% if skill.payment_type != "free" and skill.id not in paid_skills %}
                     <a href="{% url 'payment_confirmation' skill.id %}">
                     <button id="pay-button-{{ skill.id }}" class="pay-button"  data-skill-id="{{ skill.id }}" style="display: none;">Pay Now</button></a>
                      {% endif %}
@@ -141,66 +147,75 @@
 
 <!-- JavaScript to Block Paid Videos Until Payment -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".skill-video").forEach(video => {
-            const skillId = video.id.split("-")[1]; // Extract skill ID from video ID
-            const payButton = document.getElementById(`pay-button-${skillId}`);
-    
-            // Check payment status via API
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".skill-video").forEach(video => {
+        const skillId = video.id.split("-")[1]; // Extract skill ID from video ID
+        const paymentType = video.getAttribute("data-payment-type"); // Get Payment Type
+        const payButton = document.getElementById(`pay-button-${skillId}`);
+
+        // ✅ If the video is free, allow playing immediately
+        if (paymentType === "free") {
+            return; // No restriction needed
+        }
+
+        // ❌ If the video is paid, check payment status
+        fetch(`/check-payment-status/${skillId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.has_paid) {
+                    // ✅ User has paid → Ensure video plays
+                    if (!video.querySelector("source")) {  
+                        const sourceTag = document.createElement("source");
+                        sourceTag.src = video.getAttribute("data-src"); // Store actual video URL in `data-src`
+                        sourceTag.type = "video/mp4";
+                        video.appendChild(sourceTag);
+                    }
+                    video.load();  // Ensure browser loads the video
+                } else {
+                    // ❌ User has NOT paid → Hide video & show Pay Now button
+                    video.pause();
+                    video.innerHTML = "";  
+                    if (payButton) {
+                        payButton.style.display = "block"; 
+                        payButton.onclick = function () {
+                            window.location.href = `/payment-page/?skill_id=${skillId}`;
+                        };
+                    }
+                }
+            });
+
+        // Prevent unpaid users from playing the video
+        video.addEventListener("play", function (event) {
             fetch(`/check-payment-status/${skillId}/`)
                 .then(response => response.json())
                 .then(data => {
                     if (!data.has_paid) {
+                        event.preventDefault();
                         video.pause();
-                        video.innerHTML = "";  // Remove video source to prevent playing
-    
-                        if (payButton) {
-                            payButton.style.display = "block"; // Ensure button is visible
-                            payButton.addEventListener("click", function () {
-                                window.location.href = `/payment-page/?skill_id=${skillId}`; // Redirect to payment page
-                            });
-                        }
-                    } else {
-                        // If paid, add the video source dynamically
-                        const sourceTag = document.createElement("source");
-                        sourceTag.src = "{{ skill.skill_video.url }}";
-                        sourceTag.type = "video/mp4";
-                        video.appendChild(sourceTag);
+                        alert("Please complete the payment to watch this video.");
                     }
                 });
-    
-            // Prevent playing if not paid
-            video.addEventListener("play", function (event) {
-                fetch(`/check-payment-status/${skillId}/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data.has_paid) {
-                            event.preventDefault();
-                            video.pause();
-                            alert("Please complete the payment to watch this video.");
-                        }
-                    });
-            });
         });
     });
+});
 
-    function showPaymentButton(skillId, paymentType) {
+
+// Function to show the "Pay Now" button when clicking on a video
+function showPaymentButton(skillId, paymentType) {
     const video = document.getElementById(`video-${skillId}`);
     const payButton = document.getElementById(`pay-button-${skillId}`);
 
     if (paymentType !== "free") {
-        video.pause();
-        video.innerHTML = "";  // Remove video source
-        payButton.style.display = "block";  // Show pay button
-
-        // Redirect to payment page on click
-        payButton.addEventListener("click", function () {
+        payButton.style.display = "block";  
+        payButton.onclick = function () {
             window.location.href = `/payment-page/?skill_id=${skillId}`;
-        });
+        };
     }
-    function redirectToConfirmation(skillId) {
-    window.location.href = `/payment-confirmation/${skillId}/`;
 }
+
+// Redirect function for payment confirmation
+function redirectToConfirmation(skillId) {
+    window.location.href = `/payment-confirmation/${skillId}/`;
 }
     </script>
 

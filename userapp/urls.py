@@ -40,18 +40,21 @@ urlpatterns =[
     path('skill_list/<int:additionalcategory_id>/', views.skill_list, name='skill_list'),
     path('delete_category/<int:category_id>/',views.delete_category,name="delete_category") ,
     path('add_category',views.add_category,name="add_category") ,
-   path('edit_all_categories', views.edit_all_categories, name='edit_all_categories'),
-   path('payment_confirmation/<int:skill_id>/', views.payment_confirmation, name='payment_confirmation'),
-   path('make_payment/<int:skill_id>/', views.make_payment, name='make_payment'),
-   path('process_payment/<int:skill_id>/', views.process_payment, name='process_payment'),
-   path('confirm_credit_card_payment/<int:skill_id>/', views.confirm_credit_card_payment, name='confirm_credit_card_payment'),
-   path('payment_success/<str:transaction_id>/<str:amount>/', views.payment_success, name='payment_success'),
-   path('view_receipt/<str:transaction_id>/', views.view_receipt, name='view_receipt'),
-   path("upi_selection/<int:skill_id>/", views.upi_selection, name="upi_selection"),
-   path("upi_payment/<int:skill_id>/<str:upi_option>/", views.upi_payment, name="upi_payment"),  # Allow upi_option
-   path("confirm_upi_payment/<int:skill_id>/", views.confirm_upi_payment, name="confirm_upi_payment"),
-   path('payment-history/', views.payment_history, name='payment_history'),
-   path('view_course_video/<str:transaction_id>/', views.view_course_video, name='view_course_video'),
+    path('edit_all_categories', views.edit_all_categories, name='edit_all_categories'),
+    path('payment_confirmation/<int:skill_id>/', views.payment_confirmation, name='payment_confirmation'),
+    path('make_payment/<int:skill_id>/', views.make_payment, name='make_payment'),
+    path('process_payment/<int:skill_id>/', views.process_payment, name='process_payment'),
+    path('confirm_credit_card_payment/<int:skill_id>/', views.confirm_credit_card_payment, name='confirm_credit_card_payment'),
+    path('payment_success/<str:transaction_id>/<str:amount>/', views.payment_success, name='payment_success'),
+    path('view_receipt/<str:transaction_id>/', views.view_receipt, name='view_receipt'),
+    path("upi_selection/<int:skill_id>/", views.upi_selection, name="upi_selection"),
+    path("upi_payment/<int:skill_id>/<str:upi_option>/", views.upi_payment, name="upi_payment"),  # Allow upi_option
+    path("confirm_upi_payment/<int:skill_id>/", views.confirm_upi_payment, name="confirm_upi_payment"),
+    path('payment-history/', views.payment_history, name='payment_history'),
+    path('view_course_video/<str:transaction_id>/', views.view_course_video, name='view_course_video'),
+    path('teacher_earnings', views.teacher_earnings, name='teacher_earnings'),
+    path('teacher_payment_selection', views.teacher_payment_selection, name='teacher_payment_selection'),
+    path('check-payment-status/<int:skill_id>/', views.check_payment_status, name='check-payment-status'),
 
    
 ]

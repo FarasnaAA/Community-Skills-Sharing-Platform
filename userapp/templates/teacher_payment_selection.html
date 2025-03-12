@@ -1,0 +1,17 @@
+{% load static %}
+{% include 'header.html' %}
+
+<link rel="stylesheet" href="{% static 'css/teacher_payment_selection.css' %}">
+
+<div class="payment-selection-container">
+    <h2>Payment  History Options</h2>
+    <button class="payment-option" onclick="window.location.href='{% url 'teacher_earnings' %}'">
+        My Earnings
+    </button>
+    <button class="payment-option" onclick="window.location.href='{% url 'payment_history' %}'">
+        My Payments
+    </button>
+</div>
+
+
+{% include 'footer.html' %}

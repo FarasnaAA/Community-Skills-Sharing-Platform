@@ -18,12 +18,12 @@
                 <p>{{ skill.skill_name }}</p>
                 {% if skill.skill_video %}
                 <video id="video-{{ skill.id }}" class="skill-video" controls width="100%" poster="{{ skill.cover_image.url }}">
-                    {% if skill.payment_type == "free" %}
+                    {% if skill.payment_type == "free" or skill.id in paid_skills %}
                         <source src="{{ skill.skill_video.url }}" type="video/mp4">
                     {% endif %}
                 </video>
                      <!-- Payment Button (Initially Hidden) -->
-                     {% if skill.payment_type != "free" %}
+                     {% if skill.payment_type != "free" and skill.id not in paid_skills %}
                     <a href="{% url 'payment_confirmation' skill.id %}">
                     <button id="pay-button-{{ skill.id }}" class="pay-button"  data-skill-id="{{ skill.id }}" style="display: none;">Pay Now</button></a>
                  {% endif %}

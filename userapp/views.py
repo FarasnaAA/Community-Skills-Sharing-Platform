@@ -14,6 +14,7 @@ from django.http import JsonResponse
 from django.core.exceptions import MultipleObjectsReturned
 import uuid
 from urllib.parse import unquote
+from django.db.models import Sum
 
 
 
@@ -211,13 +212,13 @@ def delete_user(request,id):
 
 def profile_page(request):
     user = Register.objects.get(id=request.user.id)
-        # Fetch course history
-    attended_courses = Skill.objects.filter(user=user, status="Completed")
-    pending_courses = Skill.objects.filter(user=user, status="Pending") 
+    #     # Fetch course history
+    # attended_courses = Skill.objects.filter(user=user, status="Completed")
+    # pending_courses = Skill.objects.filter(user=user, status="Pending") 
 
 
-        # Fetch payment details
-    payments = Payment.objects.filter(user=user)
+    #     # Fetch payment details
+    # payments = Payment.objects.filter(user=user)
 
 
     if request.method == 'POST':
@@ -237,11 +238,11 @@ def profile_page(request):
     
 
     return render(request, 'reg.html', {'form': form,
-        'user': user,
-        'attended_courses': attended_courses,
-        'pending_courses': pending_courses,
-        'payments': payments,
-        'title': 'Profile Dashboard'})
+        'user': user,'title':'Update Profile','button':'Update'})
+        # 'attended_courses': attended_courses,
+        # 'pending_courses': pending_courses,
+        # 'payments': payments,
+        # 'title': 'Profile Dashboard'})
 
 
 
@@ -350,8 +351,10 @@ def followeprofile_view(request, id):
        following_list = Message.objects.filter(follower=followee, is_following=True).select_related('followee')
        followee_skills = Skill.objects.filter(user=followee).order_by('skill_created_at')
 
+    for skill in followee_skills:
+            skill.is_paid = Payment.objects.filter(user=follower, skill=skill, status="completed").exists()
 
-
+ 
 
     if request.method == "POST":
         if is_following:
@@ -623,10 +626,18 @@ def skill_list(request, additionalcategory_id):
     # Filter skills where sub_category matches the selected subcategory name
     skill_videos = Skill.objects.filter(additional_category=additional_category).order_by('id')
     print(skill_videos)
+    paid_skill_ids = set(
+        Payment.objects.filter(user=request.user, status="Completed").values_list("skill_id", flat=True)
+    )
+
+    # Add an attribute to check if the user has paid for each skill
+    for skill in skill_videos:
+        skill.is_paid = skill.id in paid_skill_ids
+
 
     return render(request, 'skill_list.html', {
         'additionalcategory' : additional_category,
-        'skill_videos': skill_videos
+        'skill_videos': skill_videos,
     })
 
 
@@ -936,3 +947,23 @@ def view_course_video(request, transaction_id):
 
 
     return render(request, 'course_video.html', {'payment': payment})
+
+#teacher earnings
+def teacher_earnings(request):
+    teacher = request.user  # Get the logged-in teacher
+    earnings = Payment.objects.filter(skill__user=teacher)  # Adjust if needed
+
+    total_earnings = earnings.aggregate(Sum('amount'))['amount__sum'] or 0
+    pending_balance = earnings.filter(status="Pending").aggregate(Sum('amount'))['amount__sum'] or 0
+
+    completed_payments = Payment.objects.filter(status="Completed").select_related('user', 'skill')
+
+    return render(request, 'teacher_earnings.html', {
+        'total_earnings': total_earnings,
+        'pending_balance': pending_balance,
+        'completed_payments': earnings
+    })
+
+#show earnings and payment selection for teachers
+def teacher_payment_selection(request):
+    return render(request, 'teacher_payment_selection.html')
